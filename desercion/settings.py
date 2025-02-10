@@ -33,7 +33,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
-    'appdesercion'
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'appdesercion',
+    'rest_framework',
+    'drf_yasg'
 ]
 
 MIDDLEWARE = [

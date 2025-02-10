@@ -8,7 +8,7 @@ class Modulo(models.Model):
     icono = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
@@ -26,7 +26,7 @@ class Vista(models.Model):
     ruta = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
@@ -41,7 +41,7 @@ class Rol(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
@@ -56,7 +56,7 @@ class RolVista(models.Model):
     vista_id = models.ForeignKey(Vista, on_delete= models.CASCADE)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
     
     class Meta:
@@ -69,7 +69,7 @@ class Persona(models.Model):
     documento = models.BigIntegerField(unique=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -82,11 +82,21 @@ class Usuario(models.Model):
     contrasena = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta: 
         db_table = 'Usuario'
+
+class UsuarioRol(models):
+    id = models.AutoField(primary_key=True)
+    usuario_id =models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    rol_id = models.ForeignKey(Rol, on_delete=models.CASCADE)
+    estado = models.BooleanField(default=True)
+    fechaCreo = models.DateTimeField(auto_now_add=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
+    fechaElimino = models.DateTimeField(blank=True, null=True)
+
 
 class Cuestionario(models.Model):
     id = models.AutoField(primary_key=True)
@@ -95,7 +105,7 @@ class Cuestionario(models.Model):
     usuariio_id = models.ForeignKey(Usuario, on_delete= models.CASCADE)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -122,7 +132,7 @@ class Preguntas(models.Model):
     textoopciones = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -134,7 +144,7 @@ class Respuestas(models.Model):
     repuestas = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -147,7 +157,7 @@ class Proceso(models.Model):
     comentarios = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
@@ -159,7 +169,7 @@ class Deserciones(models.Model):
     cuestionario_id = models.ForeignKey(Cuestionario, on_delete=models.CASCADE)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True, null=True)
+    fechaModifico = models.DateTimeField(blank=True, null=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
