@@ -1,10 +1,12 @@
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Persona, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer  # ✅ Importar explícitamente
+from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, LoginSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -60,7 +62,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         usuario = UsuarioService.crear(
             correo=data.get("correo"),
             contrasena=data.get("contrasena"),
-            estado=data.get("estado", True),  # Si no envían estado, se asume True
+            estado=data.get("estado", True),  # ✅ Asegurarse de que el estado sea True por defecto
             persona_id=data.get("persona_id"),
         )
         serializer = self.get_serializer(usuario)
@@ -72,6 +74,8 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+    
+
     
 class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = UsuarioRol.objects.filter(estado=True)
@@ -160,3 +164,18 @@ class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Deserciones eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+    
+class LoginView(APIView):
+
+    @swagger_auto_schema(
+        request_body=LoginSerializer,  # 🔹 Esto hace que Swagger muestre los campos
+        responses={200: "Login exitoso", 400: "Credenciales inválidas"}
+    )
+
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            correo = serializer.validated_data['correo']
+            contrasena = serializer.validated_data['contrasena']
+            return Response({"message": "Inicio de sesión exitoso"}, status=status.HTTP_200_OK)  # ✅ Mensaje corregido
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

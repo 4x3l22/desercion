@@ -26,3 +26,10 @@ class UsuarioService(BaseService):
         # Llamar al método crear de la clase base
         instance = super(UsuarioService, cls).crear(**kwargs)  
         return instance
+    
+    @classmethod
+    def autenticar(cls, correo, contrasena):
+        usuario = cls.dao.obtener_por_correo(correo)
+        if usuario and usuario.check_password(contrasena):
+            return usuario
+        return None
