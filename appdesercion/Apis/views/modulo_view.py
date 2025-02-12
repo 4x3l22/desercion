@@ -2,6 +2,7 @@ from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone  # ✅ Importar timezone correctamente
+from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Persona, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
 from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer  # ✅ Importar explícitamente
 
@@ -52,6 +53,18 @@ class RolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Usuario.objects.filter(estado=True)
     serializer_class = UsuarioSerializer
+
+    def create(self, request, *args, **kwargs):
+        """Sobrescribe el método create para usar UsuarioService."""
+        data = request.data
+        usuario = UsuarioService.crear(
+            correo=data.get("correo"),
+            contrasena=data.get("contrasena"),
+            estado=data.get("estado", True),  # Si no envían estado, se asume True
+            persona_id=data.get("persona_id"),
+        )
+        serializer = self.get_serializer(usuario)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
