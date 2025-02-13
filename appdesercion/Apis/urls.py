@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, ModuloViewSet, PersonaViewSet, PreguntasViewSet, ProcesoViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
+from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, ModuloViewSet, PersonaViewSet, PreguntasViewSet, ProcesoViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, SolicitarRecuperacionView, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
 
 router = DefaultRouter()
 router.register(r'modulos', ModuloViewSet, basename='modulo')
@@ -18,5 +18,6 @@ router.register(r'proceso', ProcesoViewSet, basename='proceso')
 router.register(r'deserciones', DesercionesViewSet, basename='deserciones')
 
 urlpatterns = [
+        path('solicitar-recuperacion/', SolicitarRecuperacionView.as_view(), name='solicitar-recuperacion'),
     path('', include(router.urls)),  # Esto genera automáticamente las rutas CRUD
 ]

@@ -65,3 +65,8 @@ class DesercionesSerializer(serializers.ModelSerializer):
     class Meta:
         model= Deserciones
         fields= '__all__'
+
+class RecuperarContrasenaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RecuperarContrasena
+        fields= '__all__'

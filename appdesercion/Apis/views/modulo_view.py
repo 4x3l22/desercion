@@ -1,9 +1,15 @@
+import logging
+from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
-from django.utils import timezone  # ✅ Importar timezone correctamente
-from appdesercion.models import Cuestionario, Deserciones, Modulo, Persona, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer  # ✅ Importar explícitamente
+from django.utils import timezone
+from appdesercion.models import Cuestionario, Deserciones, Modulo, Persona, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista
+from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer
+from appdesercion.Business.usuario_service import UsuarioService
+
+# Configura el logger
+logger = logging.getLogger(__name__)
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -53,6 +59,18 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Usuario.objects.filter(estado=True)
     serializer_class = UsuarioSerializer
 
+    def create(self, request, *args, **kwargs):
+        """Sobrescribe el método create para usar UsuarioService."""
+        data = request.data
+        usuario = UsuarioService.crear(
+            correo=data.get("correo"),
+            contrasena=data.get("contrasena"),
+            estado=data.get("estado", True),  # Si no envían estado, se asume True
+            persona_id=data.get("persona_id"),
+        )
+        serializer = self.get_serializer(usuario)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.estado = False
@@ -81,6 +99,8 @@ class PersonaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Persona eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+    
+
     
 # class RecuperarContrasenaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 #     queryset = RecuperarContrasena.objects.filter(estado=True)
@@ -147,3 +167,16 @@ class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Deserciones eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+
+class SolicitarRecuperacionView(APIView):
+    def post(self, request, *args, **kwargs):
+        email = request.data.get('email')
+        if not email:
+            return Response({"error": "El correo es requerido"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        if UsuarioService.solicitar_recuperacion(email):
+            logger.info("Correo de recuperación enviado correctamente")
+            return Response({"message": "Correo de recuperación enviado"}, status=status.HTTP_200_OK)
+        else:
+            logger.error("Error al enviar el correo de recuperación")
+            return Response({"error": "No se pudo enviar el correo de recuperación"}, status=status.HTTP_400_BAD_REQUEST)
