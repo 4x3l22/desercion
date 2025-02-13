@@ -9,13 +9,11 @@ router.register(r'rolvista', RolVistaViewSet, basename='rolvista')
 router.register(r'rol', RolViewSet, basename='rol')
 router.register(r'usuariorol', UsuarioRolViewSet, basename='usuariorol')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
-# router.register(r'recuperarcontrasena', RecuperarContrasenaViewSet, basename='recuperarcontrasena')
 router.register(r'cuestionario', CuestionarioViewSet, basename='cuestionario')
 router.register(r'preguntas', PreguntasViewSet, basename='preguntas')
 router.register(r'respuestas', RespuestasViewSet, basename='respuestas')
 router.register(r'proceso', ProcesoViewSet, basename='proceso')
 router.register(r'deserciones', DesercionesViewSet, basename='deserciones')
-# router.register(r'login', LoginView, basename='login')
 
 urlpatterns = [
     path('', include(router.urls)),  # Esto genera automáticamente las rutas CRUD

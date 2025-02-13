@@ -12,7 +12,6 @@ class UsuarioService(BaseService):
 
     @classmethod
     def crear(cls, **kwargs):
-        print("🔥 Método crear de UsuarioService llamado con:", kwargs)
 
         if "contrasena" in kwargs:
             kwargs["contrasena"] = make_password(kwargs["contrasena"])  
@@ -27,9 +26,9 @@ class UsuarioService(BaseService):
         usuario = UsuarioDAO.obtener_usuario_por_correo(correo)
         
         if not usuario:
-            return None  # Usuario no encontrado
+            return None 
 
-        usuario = usuario[0]  # Como la consulta devuelve una lista, tomamos el primer resultado
+        usuario = usuario[0]
         
         if check_password(contrasena, usuario["contrasena"]):
 
@@ -39,8 +38,8 @@ class UsuarioService(BaseService):
             vistas_rol_dict = [vars(vista) for vista in vistas_rol]
 
             return {
-                "id": usuario["usuario_id"],
-                "rol_id": usuario["rol_id"],  # Asegúrate del nombre correcto de la columna
+                "usuario_id": usuario["usuario_id"],
+                "rol_id": usuario["rol_id"], 
                 "vistas_rol": vistas_rol_dict
             }
         return None  # Contraseña incorrecta
