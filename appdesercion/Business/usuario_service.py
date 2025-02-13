@@ -5,19 +5,21 @@ from appdesercion.models import  Usuario
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 
+from appdesercion.utils.email_utils import EmailService
+
 class UsuarioService(BaseService):
     model=Usuario
     dao=UsuarioDAO
 
     @classmethod
     def crear(cls, **kwargs):
-
+  
         if "contrasena" in kwargs:
-            kwargs["contrasena"] = make_password(kwargs["contrasena"])  
-            print("🔒 Contraseña hasheada:", kwargs["contrasena"])
+            kwargs["contrasena"] = make_password(kwargs["contrasena"])
 
         # Llamar al método crear de la clase base
         instance = super(UsuarioService, cls).crear(**kwargs)  
+        
         return instance
     
     @staticmethod
