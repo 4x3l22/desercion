@@ -6,3 +6,6 @@ settings.py
 
 # Ignorar la carpeta migrations en cualquier nivel
 migrations/
+
+# Ignorar archivo Dockerfile
+Dockerfile
