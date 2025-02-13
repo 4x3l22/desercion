@@ -80,7 +80,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sena',
         'USER': 'root',
-        'PASSWORD':'123456',
+        'PASSWORD':'12345',
         'HOST': 'localhost',
         'PORT': '3306'
     }
@@ -106,6 +106,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# settings.py
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
@@ -127,3 +131,13 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False  # Debe estar en False si estás usando TLS
+EMAIL_HOST_USER = 'xzenzi259@gmail.com'
+EMAIL_HOST_PASSWORD = 'pquw hlrm aooj cvcv'  # Asegúrate de que sea una contraseña de aplicación
+DEFAULT_FROM_EMAIL = 'xzenzi259@gmail.com'
