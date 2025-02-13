@@ -69,7 +69,7 @@ class Usuario(models.Model):
     contrasena = models.TextField(blank=True, null=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
-    documento = models.CharField(max_length=20, unique=True, null=False, blank=False)
+    documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
