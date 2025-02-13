@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, ModuloViewSet, PersonaViewSet, PreguntasViewSet, ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
+from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, PersonaViewSet, PreguntasViewSet, ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
 
 router = DefaultRouter()
 router.register(r'modulos', ModuloViewSet, basename='modulo')
@@ -16,7 +16,9 @@ router.register(r'preguntas', PreguntasViewSet, basename='preguntas')
 router.register(r'respuestas', RespuestasViewSet, basename='respuestas')
 router.register(r'proceso', ProcesoViewSet, basename='proceso')
 router.register(r'deserciones', DesercionesViewSet, basename='deserciones')
+# router.register(r'login', LoginView, basename='login')
 
 urlpatterns = [
     path('', include(router.urls)),  # Esto genera automáticamente las rutas CRUD
+    path('login/', LoginView.as_view(), name='login'),  # Ruta personalizada para el login
 ]

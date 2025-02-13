@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import check_password
 
 # Create your models here.
 class Modulo(models.Model):
@@ -78,13 +79,16 @@ class Persona(models.Model):
 class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
     persona_id = models.ForeignKey(Persona, on_delete= models.CASCADE)
-    correo = models.CharField(max_length=100)
+    correo = models.EmailField(unique=True)
     contrasena = models.TextField(blank=True, null=True)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
+    def verificar_contasena(self, contrasena):
+        return check_password(contrasena, self.contrasena)
+    
     class Meta: 
         db_table = 'Usuario'
 

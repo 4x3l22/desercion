@@ -28,6 +28,13 @@ class UsuarioService(BaseService):
         return instance
     
     @classmethod
+    def autenticar(cls, correo, contrasena):
+        usuario = cls.dao.obtener_por_correo(correo)
+        if usuario and usuario.check_password(contrasena):
+            return usuario
+        return None
+    
+    @classmethod
     def actualizar(cls, id, **kwargs):
         obj = cls.obtener_por_id(id)
         if obj:
@@ -45,4 +52,4 @@ class UsuarioService(BaseService):
     
     @classmethod
     def consultar_por_correo(cls, correo):
-        return cls.model.objects.filter(correo=correo).first()    
+        return cls.model.objects.filter(correo=correo).first()
