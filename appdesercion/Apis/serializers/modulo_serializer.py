@@ -64,3 +64,10 @@ class DesercionesSerializer(serializers.ModelSerializer):
 class UsuarioLoginSerializer(serializers.Serializer):
     correo = serializers.EmailField()
     contrasena = serializers.CharField(write_only=True)
+    
+class EnviarCodigoSerializer(serializers.Serializer):
+    correo = serializers.EmailField()
+    
+class VerificarCodigoSerializer(serializers.Serializer):
+    codigo = serializers.CharField(max_length=10)
+    usuario_id = serializers.IntegerField()
