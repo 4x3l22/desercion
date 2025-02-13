@@ -63,24 +63,13 @@ class RolVista(models.Model):
     class Meta:
         db_table = 'RolVista'
 
-class Persona(models.Model):
-    id = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=100)
-    documento = models.BigIntegerField(unique=True)
-    estado = models.BooleanField(default=True)
-    fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True)
-    fechaElimino = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'Persona'
-
 class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
-    persona_id = models.ForeignKey(Persona, on_delete= models.CASCADE)
     correo = models.EmailField(unique=True)
     contrasena = models.TextField(blank=True, null=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    documento = models.CharField(max_length=20, unique=True, null=False, blank=False)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
@@ -100,6 +89,9 @@ class UsuarioRol(models.Model):
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'UsuarioRol'
 
 
 class Cuestionario(models.Model):

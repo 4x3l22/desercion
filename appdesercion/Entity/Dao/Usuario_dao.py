@@ -11,11 +11,11 @@ class UsuarioDAO(BaseDAO):
 
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT U.Id, 
+                SELECT U.Id AS usuario_id, 
                 U.contrasena, 
-                ur.RolId
-                FROM Usuario AS U
-                INNER JOIN UsuarioRol AS ur ON ur.usuario_id = U.Id
+                ur.Id AS rol_id
+                FROM sena.Usuario AS U
+                INNER JOIN sena.UsuarioRol AS ur ON ur.usuario_id_id = U.Id
                 WHERE U.correo = %s;
             """, [correo])
             columnas= [col[0] for col in cursor.description]

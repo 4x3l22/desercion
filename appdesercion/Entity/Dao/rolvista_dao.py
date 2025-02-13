@@ -1,5 +1,6 @@
 from django.db import connection
 from appdesercion.Entity.Dao.base_dao import BaseDAO
+from appdesercion.Entity.Dto.menu_dto import MenuDto
 from appdesercion.models import RolVista
 
 
@@ -11,19 +12,19 @@ class RolVistaDAO(BaseDAO):
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT 
-                    v.Nombre AS nombreVista, 
-                    m.Nombre AS nombreModulo, 
+                   v.nombre AS nombreVista, 
+                    m.nombre AS nombreModulo, 
                     v.Id AS vistaId,
                     m.Id AS moduloId,
-                    m.Items AS moduloIconos,
-                    v.Items AS vistaIconos,
-                    v.Ruta AS RutaVista
-                FROM Rols AS r 
-                INNER JOIN RolVistas AS rv ON rv.RolId = r.Id
-                INNER JOIN Vistas AS v ON v.Id = rv.VistaId
-                INNER JOIN Modulos AS m ON m.Id = v.ModuloId
+                    m.icono AS moduloIconos,
+                    v.icono AS vistaIconos,
+                    v.ruta AS RutaVista
+                FROM sena.Rol AS r 
+                INNER JOIN sena.RolVista AS rv ON rv.rol_id_id = r.Id
+                INNER JOIN sena.Vista AS v ON v.Id = rv.vista_id_id
+                INNER JOIN sena.Modulo AS m ON m.Id = v.modulo_id_id
                 WHERE r.Id = %s;
             """, [rol_id])
             columnas = [col[0] for col in cursor.description]
-            resultados = [dict(zip(columnas, fila)) for fila in cursor.fetchall()]
+            resultados = [MenuDto(**dict(zip(columnas, fila))) for fila in cursor.fetchall()]
         return resultados
