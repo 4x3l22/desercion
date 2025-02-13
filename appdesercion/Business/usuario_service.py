@@ -1,7 +1,9 @@
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.Usuario_dao import UsuarioDAO
-from appdesercion.models import Persona, Usuario
+from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
+from appdesercion.models import  Usuario
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import check_password
 
 
 class UsuarioService(BaseService):
@@ -16,20 +18,29 @@ class UsuarioService(BaseService):
             kwargs["contrasena"] = make_password(kwargs["contrasena"])  
             print("🔒 Contraseña hasheada:", kwargs["contrasena"])
 
-        # Obtener instancia de Persona si se pasó persona_id
-        if "persona_id" in kwargs:
-            try:
-                kwargs["persona_id"] = Persona.objects.get(id=kwargs["persona_id"])  
-            except Persona.DoesNotExist:
-                raise ValueError("❌ No existe una persona con el ID proporcionado.")  
-
         # Llamar al método crear de la clase base
         instance = super(UsuarioService, cls).crear(**kwargs)  
         return instance
     
-    @classmethod
-    def autenticar(cls, correo, contrasena):
-        usuario = cls.dao.obtener_por_correo(correo)
-        if usuario and usuario.check_password(contrasena):
-            return usuario
-        return None
+    @staticmethod
+    def autenticar_usuario(correo, contrasena):
+        usuario = UsuarioDAO.obtener_usuario_por_correo(correo)
+        
+        if not usuario:
+            return None  # Usuario no encontrado
+
+        usuario = usuario[0]  # Como la consulta devuelve una lista, tomamos el primer resultado
+        
+        if check_password(contrasena, usuario["contrasena"]):
+
+            vistas_rol = RolVistaDAO.obtener_vistas_por_rol(usuario["rol_id"])
+            
+            # Convertimos cada objeto MenuDto a un diccionario
+            vistas_rol_dict = [vars(vista) for vista in vistas_rol]
+
+            return {
+                "id": usuario["usuario_id"],
+                "rol_id": usuario["rol_id"],  # Asegúrate del nombre correcto de la columna
+                "vistas_rol": vistas_rol_dict
+            }
+        return None  # Contraseña incorrecta
