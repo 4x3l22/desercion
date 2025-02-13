@@ -1,17 +1,19 @@
+from rest_framework.decorators import action 
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
+from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, ModuloSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer  # ✅ Importar explícitamente
+from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, EnviarCodigoSerializer, ModuloSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
     serializer_class = ModuloSerializer
-
+    
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.estado = False
@@ -66,6 +68,24 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         )
         serializer = self.get_serializer(usuario)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        data = request.data
+
+        usuario_actualizado = UsuarioService.actualizar(
+            instance.id,
+            correo=data.get("correo", instance.correo),
+            contrasena=data.get("contrasena") if "contrasena" in data else None,
+            estado=data.get("estado", instance.estado),
+            persona_id_id=data.get("persona_id", instance.persona_id if instance.persona_id else None),
+        )
+
+        if usuario_actualizado:
+            serializer = self.get_serializer(usuario_actualizado)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response({"error": "No se pudo actualizar el usuario."}, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -86,6 +106,62 @@ class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+        
+class RecuperarContrasenaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
+    queryset = RecuperarContrasena.objects.filter(usado=True)
+    serializer_class = RecuperarContrasenaSerializer
+    
+    @swagger_auto_schema(
+        request_body=EnviarCodigoSerializer, 
+        responses={200: "Codigo enviado", 400: "Correo inválido"}
+    )
+    
+    @action(detail=False, methods=["post"], url_path="enviar-codigo", url_name="enviar_codigo")
+    def enviar_codigo(self, request):
+        serializer = EnviarCodigoSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+        correo = request.data.get("correo")
+        if not correo:  
+            return Response({"error": "El correo es obligatorio"}, status=status.HTTP_400_BAD_REQUEST)
+
+        resultado = RecuperarContrasenaService.EnviarCodigo(correo)
+
+        if isinstance(resultado, str): 
+            return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"message": "Código enviado correctamente", "codigo": resultado.codigo}, status=status.HTTP_200_OK)
+    
+    @swagger_auto_schema(
+        request_body=VerificarCodigoSerializer, 
+        responses={200: "Código verificado", 400: "Código inválido"}
+    )
+    
+    @action(detail=False, methods=["post"], url_path="verificar-codigo", url_name="verificar_codigo")
+    def verificar_codigo(self, request):
+        serializer = VerificarCodigoSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        codigo = request.data.get("codigo")
+        usuario_id = request.data.get("usuario_id")
+        if not codigo or not usuario_id:
+            return Response({"error": "El código y el usuario son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        resultado = RecuperarContrasenaService.VerificarCodigo(codigo, usuario_id)
+
+        if isinstance(resultado, str):
+            return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"message": "Código verificado correctamente"}, status=status.HTTP_200_OK)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.estado = False
+        instance.fechaElimino = timezone.now()
+        instance.save()
+        return Response({"message": "Vista eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Cuestionario.objects.filter(estado=True)

@@ -2,9 +2,8 @@ from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.Usuario_dao import UsuarioDAO
 from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
 from appdesercion.models import  Usuario
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.hashers import check_password
-
+from django.contrib.auth.hashers import make_password, check_password
+from datetime import datetime
 
 class UsuarioService(BaseService):
     model=Usuario
@@ -44,3 +43,23 @@ class UsuarioService(BaseService):
                 "vistas_rol": vistas_rol_dict
             }
         return None  # Contraseña incorrecta
+    
+    @classmethod
+    def actualizar(cls, id, **kwargs):
+        obj = cls.obtener_por_id(id)
+        if obj:
+            if "contrasena" in kwargs:
+                kwargs["contrasena"] = make_password(kwargs["contrasena"])
+
+            for key, value in kwargs.items():
+                setattr(obj, key, value)
+
+            obj.fechaModifico = datetime.now()
+            obj.save()
+            return obj
+
+        return None
+    
+    @classmethod
+    def consultar_por_correo(cls, correo):
+        return cls.model.objects.filter(correo=correo).first()
