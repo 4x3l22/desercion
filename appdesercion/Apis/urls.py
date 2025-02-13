@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, ModuloViewSet, PersonaViewSet, PreguntasViewSet, ProcesoViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
+from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, ModuloViewSet, PersonaViewSet, PreguntasViewSet, ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
 
 router = DefaultRouter()
 router.register(r'modulos', ModuloViewSet, basename='modulo')
@@ -10,7 +10,7 @@ router.register(r'rol', RolViewSet, basename='rol')
 router.register(r'usuariorol', UsuarioRolViewSet, basename='usuariorol')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'persona', PersonaViewSet, basename='persona')
-# router.register(r'recuperarcontrasena', RecuperarContrasenaViewSet, basename='recuperarcontrasena')
+router.register(r'recuperarcontrasena', RecuperarContrasenaViewSet, basename='recuperarcontrasena')
 router.register(r'cuestionario', CuestionarioViewSet, basename='cuestionario')
 router.register(r'preguntas', PreguntasViewSet, basename='preguntas')
 router.register(r'respuestas', RespuestasViewSet, basename='respuestas')

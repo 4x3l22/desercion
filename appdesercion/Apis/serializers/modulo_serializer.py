@@ -65,3 +65,6 @@ class DesercionesSerializer(serializers.ModelSerializer):
     class Meta:
         model= Deserciones
         fields= '__all__'
+        
+class EnviarCodigoSerializer(serializers.Serializer):
+    correo = serializers.EmailField(required=True)
