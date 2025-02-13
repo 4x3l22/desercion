@@ -8,7 +8,7 @@ from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Persona, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, EnviarCodigoSerializer, LoginSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VistaSerializer  # ✅ Importar explícitamente
+from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, EnviarCodigoSerializer, LoginSerializer, ModuloSerializer, PersonaSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioRolSerializer, UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -143,7 +143,30 @@ class RecuperarContrasenaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelVi
         if isinstance(resultado, str): 
             return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Código enviado correctamente", "codigo": resultado}, status=status.HTTP_200_OK)
+        return Response({"message": "Código enviado correctamente", "codigo": resultado.codigo}, status=status.HTTP_200_OK)
+    
+    @swagger_auto_schema(
+        request_body=VerificarCodigoSerializer, 
+        responses={200: "Código verificado", 400: "Código inválido"}
+    )
+    
+    @action(detail=False, methods=["post"], url_path="verificar-codigo", url_name="verificar_codigo")
+    def verificar_codigo(self, request):
+        serializer = VerificarCodigoSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        codigo = request.data.get("codigo")
+        usuario_id = request.data.get("usuario_id")
+        if not codigo or not usuario_id:
+            return Response({"error": "El código y el usuario son obligatorios"}, status=status.HTTP_400_BAD_REQUEST)
+
+        resultado = RecuperarContrasenaService.VerificarCodigo(codigo, usuario_id)
+
+        if isinstance(resultado, str):
+            return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"message": "Código verificado correctamente"}, status=status.HTTP_200_OK)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()

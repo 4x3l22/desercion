@@ -72,3 +72,7 @@ class LoginSerializer(serializers.Serializer):
     
 class EnviarCodigoSerializer(serializers.Serializer):
     correo = serializers.EmailField()
+    
+class VerificarCodigoSerializer(serializers.Serializer):
+    codigo = serializers.CharField(max_length=10)
+    usuario_id = serializers.IntegerField()

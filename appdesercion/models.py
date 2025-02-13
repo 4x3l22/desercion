@@ -206,7 +206,7 @@ class RecuperarContrasena(models.Model):
     codigo = models.CharField(max_length=10)
     expiracion = models.DateTimeField(blank=True, null=True)
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
-    usado = models.BooleanField(default=True)
+    usado = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'RecuperarContrasena'
