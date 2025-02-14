@@ -14,8 +14,8 @@ class UsuarioDAO(BaseDAO):
                 SELECT U.Id AS usuario_id, 
                 U.contrasena, 
                 ur.Id AS rol_id
-                FROM sena.Usuario AS U
-                INNER JOIN sena.UsuarioRol AS ur ON ur.usuario_id_id = U.Id
+                FROM Sena1.Usuario AS U
+                INNER JOIN Sena1.UsuarioRol AS ur ON ur.usuario_id_id = U.Id
                 WHERE U.correo = %s;
             """, [correo])
             columnas= [col[0] for col in cursor.description]

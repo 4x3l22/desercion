@@ -47,7 +47,7 @@ class UsuarioService(BaseService):
 
         usuario = usuario[0]
 
-        # Verificar la contraseña
+        
         if check_password(contrasena, usuario["contrasena"]):
             # Obtener las vistas asociadas al rol del usuario
             vistas_rol = RolVistaDAO.obtener_vistas_por_rol(usuario["rol_id"])

@@ -19,10 +19,10 @@ class RolVistaDAO(BaseDAO):
                     m.icono AS moduloIconos,
                     v.icono AS vistaIconos,
                     v.ruta AS RutaVista
-                FROM sena.Rol AS r 
-                INNER JOIN sena.RolVista AS rv ON rv.rol_id_id = r.Id
-                INNER JOIN sena.Vista AS v ON v.Id = rv.vista_id_id
-                INNER JOIN sena.Modulo AS m ON m.Id = v.modulo_id_id
+                FROM Sena1.Rol AS r 
+                INNER JOIN Sena1.RolVista AS rv ON rv.rol_id_id = r.Id
+                INNER JOIN Sena1.Vista AS v ON v.Id = rv.vista_id_id
+                INNER JOIN Sena1.Modulo AS m ON m.Id = v.modulo_id_id
                 WHERE r.Id = %s;
             """, [rol_id])
             columnas = [col[0] for col in cursor.description]
