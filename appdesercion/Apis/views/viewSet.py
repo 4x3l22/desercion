@@ -1,4 +1,6 @@
-from rest_framework.decorators import action 
+from http.client import responses
+
+from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -137,7 +139,7 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado Model
         if isinstance(resultado, str): 
             return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Código enviado correctamente", "codigo": resultado.codigo}, status=status.HTTP_200_OK)
+        return Response({"message": "Código enviado correctamente","usuario": resultado.usuario_id.id, "codigo": resultado.codigo}, status=status.HTTP_200_OK)
     
     @swagger_auto_schema(
         request_body=VerificarCodigoSerializer, 
