@@ -4,6 +4,7 @@ from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
 from appdesercion.models import  Usuario
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
+from appdesercion.utils.email_utils import EmailService 
 
 class UsuarioService(BaseService):
     model=Usuario
@@ -11,13 +12,26 @@ class UsuarioService(BaseService):
 
     @classmethod
     def crear(cls, **kwargs):
+        """
+        Crea un nuevo usuario y envía un correo de bienvenida.
+        """
+        print("🔍 kwargs recibidos:", kwargs)
 
+        # Hashear la contraseña si está presente
         if "contrasena" in kwargs:
             kwargs["contrasena"] = make_password(kwargs["contrasena"])
 
-        # Llamar al método crear de la clase base
-        instance = super(UsuarioService, cls).crear(**kwargs)  
+        # Crear la instancia del usuario
+        instance = super(UsuarioService, cls).crear(**kwargs)
+        print("🔍 Instancia creada:", instance)
+
+        # Enviar correo de bienvenida si el usuario se creó correctamente
+        if instance and "correo" in kwargs:
+            print("📧 Intentando enviar correo de bienvenida a:", kwargs["correo"])
+            EmailService.send_welcome_email(kwargs["correo"])
+
         return instance
+
     
     @staticmethod
     def autenticar_usuario(correo, contrasena):
