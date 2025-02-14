@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, \
+from appdesercion.Apis.views.viewSet import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, \
     ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, \
     UsuarioRolViewSet, UsuarioViewSet, VistaViewSet, AprendizViewSet, ComentarioViewSet
 
