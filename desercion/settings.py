@@ -80,9 +80,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'sena',
         'USER': 'root',
-        'PASSWORD':'123456',
+        'PASSWORD':'password',
         'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'PORT': '4041'
     }
 }
 
