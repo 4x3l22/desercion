@@ -104,15 +104,14 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 
     
 class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = UsuarioRol.objects.filter(estado=True)
+    queryset = UsuarioRol.objects.filter(fechaElimino__isnull=True)
     serializer_class = UsuarioRolSerializer
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.estado = False
-        instance.fechaElimino = timezone.now()
-        instance.save()
-        return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+    # def destroy(self, request, *args, **kwargs):
+    #     instance = self.get_object()
+    #     instance.fechaElimino = timezone.now()
+    #     instance.save()
+    #     return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
         
 class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado ModelViewSet
     queryset = RecuperarContrasena.objects.filter(usado=True)
@@ -236,21 +235,24 @@ class ComentarioViewSet(viewsets.ModelViewSet):
 class LoginView(APIView):
 
     @swagger_auto_schema(
-        request_body=UsuarioLoginSerializer, 
-        responses={200: "Login exitoso", 400: "Credenciales inválidas"}
+        request_body=UsuarioLoginSerializer,
+        responses={200: "Login exitoso", 400: "Credenciales inválidas", 403: "Usuario sin rol asignado"}
     )
-    
     def post(self, request):
         serializer = UsuarioLoginSerializer(data=request.data)
 
         if serializer.is_valid():
             correo = serializer.validated_data["correo"]
             contrasena = serializer.validated_data["contrasena"]
-            
+
             usuario = UsuarioService.autenticar_usuario(correo, contrasena)
-            
+
             if usuario:
+                if not usuario.get("rol_id"):
+                    return Response({"error": "Usuario sin rol asignado"}, status=status.HTTP_403_FORBIDDEN)
+
                 return Response(usuario, status=status.HTTP_200_OK)
+
             return Response({"error": "Credenciales incorrectas"}, status=status.HTTP_401_UNAUTHORIZED)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

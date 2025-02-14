@@ -9,7 +9,7 @@ __pycache__/
 /desercion/settings.py
 
 # Ignorar la carpeta migrations en cualquier nivel
-migrations/
+*/migrations/
 
 # Ignorar archivo Dockerfile
 Dockerfile

@@ -15,7 +15,7 @@ class UsuarioDAO(BaseDAO):
                 U.contrasena, 
                 ur.Id AS rol_id
                 FROM sena.Usuario AS U
-                INNER JOIN sena.UsuarioRol AS ur ON ur.usuario_id_id = U.Id
+                LEFT JOIN sena.UsuarioRol AS ur ON ur.usuario_id_id = U.Id
                 WHERE U.correo = %s;
             """, [correo])
             columnas= [col[0] for col in cursor.description]
