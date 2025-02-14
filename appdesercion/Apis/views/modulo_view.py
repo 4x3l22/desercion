@@ -7,8 +7,13 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
-from appdesercion.models import Cuestionario, Deserciones, Modulo, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, EnviarCodigoSerializer, ModuloSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer  # ✅ Importar explícitamente
+from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuestas, Rol, \
+    RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario  # ✅ Importar solo lo necesario
+from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, \
+    EnviarCodigoSerializer, ModuloSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, \
+    RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
+    UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
+    ComentarioSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -109,19 +114,21 @@ class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.save()
         return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
         
-class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Solo GenericViewSet
-    serializer_class = RecuperarContrasenaSerializer  
-
+class RecuperarContrasenaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
+    queryset = RecuperarContrasena.objects.filter(usado=True)
+    serializer_class = RecuperarContrasenaSerializer
+    
     @swagger_auto_schema(
         request_body=EnviarCodigoSerializer, 
-        responses={200: "Código enviado", 400: "Correo inválido"}
+        responses={200: "Codigo enviado", 400: "Correo inválido"}
     )
+    
     @action(detail=False, methods=["post"], url_path="enviar-codigo", url_name="enviar_codigo")
     def enviar_codigo(self, request):
         serializer = EnviarCodigoSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        
         correo = request.data.get("correo")
         if not correo:  
             return Response({"error": "El correo es obligatorio"}, status=status.HTTP_400_BAD_REQUEST)
@@ -132,11 +139,12 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Solo GenericVi
             return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
 
         return Response({"message": "Código enviado correctamente", "codigo": resultado.codigo}, status=status.HTTP_200_OK)
-
+    
     @swagger_auto_schema(
         request_body=VerificarCodigoSerializer, 
         responses={200: "Código verificado", 400: "Código inválido"}
     )
+    
     @action(detail=False, methods=["post"], url_path="verificar-codigo", url_name="verificar_codigo")
     def verificar_codigo(self, request):
         serializer = VerificarCodigoSerializer(data=request.data)
@@ -153,7 +161,14 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Solo GenericVi
         if isinstance(resultado, str):
             return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Código verificado correctamente"}, status=status.HTTP_200_OK)    
+        return Response({"message": "Código verificado correctamente"}, status=status.HTTP_200_OK)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.estado = False
+        instance.fechaElimino = timezone.now()
+        instance.save()
+        return Response({"message": "Vista eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Cuestionario.objects.filter(estado=True)
@@ -166,16 +181,15 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.save()
         return Response({"message": "Cuestionario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
-class PreguntasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Preguntas.objects.filter(estado=True)
-    serializer_class = PreguntasSerializer
+class AprendizViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
+    queryset = Aprendiz.objects.filter(fechaElimino__isnull=True)
+    serializer_class = AprendizSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
-        return Response({"message": "Preguntas eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+        return Response({"message": "Aprendiz eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Respuestas.objects.filter(estado=True)
@@ -189,12 +203,11 @@ class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         return Response({"message": "Respuestas eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Proceso.objects.filter(estado=True)
+    queryset = Proceso.objects.filter(fechaElimino__isnull=True)
     serializer_class = ProcesoSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Proceso eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -209,7 +222,17 @@ class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Deserciones eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
-    
+
+class ComentarioViewSet(viewsets.ModelViewSet):
+    queryset = Comentario.objects.filter(fechaElimino__isnull=True)
+    serializer_class = ComentarioSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.estado = False
+        instance.fechaElimino = timezone.now()
+        instance.save()
+        return Response({"message": "Comentario Eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
 class LoginView(APIView):
 
     @swagger_auto_schema(

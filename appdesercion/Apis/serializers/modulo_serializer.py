@@ -41,9 +41,9 @@ class CuestionarioSerializers(serializers.ModelSerializer):
         model= Cuestionario
         fields= '__all__'
 
-class PreguntasSerializer(serializers.ModelSerializer):
+class AprendizSerializer(serializers.ModelSerializer):
     class Meta:
-        model= Preguntas
+        model= Aprendiz
         fields= '__all__'
 
 class RespuestasSerializer(serializers.ModelSerializer):
@@ -71,3 +71,8 @@ class EnviarCodigoSerializer(serializers.Serializer):
 class VerificarCodigoSerializer(serializers.Serializer):
     codigo = serializers.CharField(max_length=10)
     usuario_id = serializers.IntegerField()
+
+class ComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Comentario
+        fields= '__all__'

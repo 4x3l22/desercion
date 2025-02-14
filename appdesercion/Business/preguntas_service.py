@@ -1,8 +1,8 @@
 from appdesercion.Business.base_service import BaseService
-from appdesercion.Entity.Dao.preguntas_dao import PreguntasDAO
-from appdesercion.models import Preguntas
+from appdesercion.Entity.Dao.aprendiz_dao import AprendizDAO
+from appdesercion.models import Aprendiz
 
 
-class PreguntasService(BaseService):
-    model=Preguntas
-    dao=PreguntasDAO
+class AprendizService(BaseService):
+    model=Aprendiz
+    dao=AprendizDAO
