@@ -19,9 +19,7 @@ class UsuarioService(BaseService):
 
         # Hashear la contraseña si está presente
         if "contrasena" in kwargs:
-            print("🔑 Contraseña recibida:", kwargs["contrasena"])
             kwargs["contrasena"] = make_password(kwargs["contrasena"])
-            print("🔒 Contraseña hasheada:", kwargs["contrasena"])
 
         # Crear la instancia del usuario
         instance = super(UsuarioService, cls).crear(**kwargs)
