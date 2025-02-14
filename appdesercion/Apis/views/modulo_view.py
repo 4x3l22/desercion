@@ -7,8 +7,13 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
-from appdesercion.models import Cuestionario, Deserciones, Modulo, Preguntas, Proceso, RecuperarContrasena, Respuestas, Rol, RolVista, Usuario, UsuarioRol, Vista  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, EnviarCodigoSerializer, ModuloSerializer, PreguntasSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer  # ✅ Importar explícitamente
+from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuestas, Rol, \
+    RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario  # ✅ Importar solo lo necesario
+from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, \
+    EnviarCodigoSerializer, ModuloSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, \
+    RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
+    UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
+    ComentarioSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -63,8 +68,11 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         data = request.data
         usuario = UsuarioService.crear(
             correo=data.get("correo"),
+            nombres=data.get("nombres"),
+            apellidos=data.get("apellidos"),
+            documento=data.get("documento"),
             contrasena=data.get("contrasena"),
-            estado=data.get("estado", True), # ✅ Valor predeterminado para estado
+            estado=data.get("estado", True),
         )
         serializer = self.get_serializer(usuario)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -77,8 +85,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
             instance.id,
             correo=data.get("correo", instance.correo),
             contrasena=data.get("contrasena") if "contrasena" in data else None,
-            estado=data.get("estado", instance.estado),
-            persona_id_id=data.get("persona_id", instance.persona_id if instance.persona_id else None),
+            estado=data.get("estado", instance.estado)
         )
 
         if usuario_actualizado:
@@ -174,16 +181,15 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.save()
         return Response({"message": "Cuestionario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
-class PreguntasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Preguntas.objects.filter(estado=True)
-    serializer_class = PreguntasSerializer
+class AprendizViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
+    queryset = Aprendiz.objects.filter(fechaElimino__isnull=True)
+    serializer_class = AprendizSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
-        return Response({"message": "Preguntas eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+        return Response({"message": "Aprendiz eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Respuestas.objects.filter(estado=True)
@@ -197,12 +203,11 @@ class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         return Response({"message": "Respuestas eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Proceso.objects.filter(estado=True)
+    queryset = Proceso.objects.filter(fechaElimino__isnull=True)
     serializer_class = ProcesoSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Proceso eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -217,7 +222,17 @@ class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Deserciones eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
-    
+
+class ComentarioViewSet(viewsets.ModelViewSet):
+    queryset = Comentario.objects.filter(fechaElimino__isnull=True)
+    serializer_class = ComentarioSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.estado = False
+        instance.fechaElimino = timezone.now()
+        instance.save()
+        return Response({"message": "Comentario Eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
 class LoginView(APIView):
 
     @swagger_auto_schema(

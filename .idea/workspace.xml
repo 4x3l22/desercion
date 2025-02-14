@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7c20b3e2-4b2c-4ecb-b69f-5648fa6bd165" name="Changes" comment="cambios en el modelo">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appdesercion/Business/comentario_service.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appdesercion/Entity/Dao/aprendiz_dao.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appdesercion/Entity/Dao/comentario_dao.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/appdesercion/Entity/Dto/comentario_dto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Apis/serializers/modulo_serializer.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Apis/serializers/modulo_serializer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Apis/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Apis/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Apis/views/modulo_view.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Apis/views/modulo_view.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Business/preguntas_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Business/preguntas_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Business/usuario_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Business/usuario_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Entity/Dao/preguntas_dao.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Entity/Dto/cuestionario_dto.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Entity/Dto/cuestionario_dto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Entity/Dto/preguntas_dto.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Entity/Dto/aprendiz_dto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Entity/Dto/proceso_dto.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Entity/Dto/proceso_dto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/Entity/Dto/respuestas_dto.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/Entity/Dto/respuestas_dto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/migrations/0001_initial.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/migrations/0002_alter_usuario_documento.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/migrations/0002_recuperarcontrasena_usuario_id.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/migrations/0003_merge_20250213_1116.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/appdesercion/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/appdesercion/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/desercion/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/desercion/settings.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2t25zBY3fTpMFomTQoIHWRQs3Sk" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Django Server.desercion.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenDjangoStructureViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Alejandro&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RunManager">
+    <configuration name="desercion" type="Python.DjangoServer" factoryName="Django server">
+      <module name="desercion" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="desercion.settings" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <option name="port" value="8000" />
+      <option name="host" value="" />
+      <option name="additionalOptions" value="" />
+      <option name="browserUrl" value="" />
+      <option name="runTestServer" value="false" />
+      <option name="runNoReload" value="false" />
+      <option name="useCustomRunCommand" value="false" />
+      <option name="customRunCommand" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-PY-243.24978.54" />
+        <option value="bundled-python-sdk-91e3b7efe1d4-466328ff949b-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.24978.54" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7c20b3e2-4b2c-4ecb-b69f-5648fa6bd165" name="Changes" comment="" />
+      <created>1739537591375</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1739537591375</updated>
+      <workItem from="1739537593841" duration="2372000" />
+    </task>
+    <task id="LOCAL-00001" summary="cambios en el modelo">
+      <option name="closed" value="true" />
+      <created>1739544421610</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1739544421610</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="no cambios" />
+    <MESSAGE value="cambios en el modelo" />
+    <option name="LAST_COMMIT_MESSAGE" value="cambios en el modelo" />
+  </component>
+</project>

@@ -41,7 +41,7 @@ class UsuarioService(BaseService):
                 "rol_id": usuario["rol_id"], 
                 "vistas_rol": vistas_rol_dict
             }
-        return None  # Contraseña incorrecta
+        return None 
     
     @classmethod
     def actualizar(cls, id, **kwargs):

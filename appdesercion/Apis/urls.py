@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, PreguntasViewSet, ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, UsuarioRolViewSet, UsuarioViewSet, VistaViewSet
+from appdesercion.Apis.views.modulo_view import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, \
+    ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, \
+    UsuarioRolViewSet, UsuarioViewSet, VistaViewSet, AprendizViewSet, ComentarioViewSet
 
 router = DefaultRouter()
 router.register(r'modulos', ModuloViewSet, basename='modulo')
@@ -11,10 +13,11 @@ router.register(r'usuariorol', UsuarioRolViewSet, basename='usuariorol')
 router.register(r'usuario', UsuarioViewSet, basename='usuario')
 router.register(r'recuperarcontrasena', RecuperarContrasenaViewSet, basename='recuperarcontrasena')
 router.register(r'cuestionario', CuestionarioViewSet, basename='cuestionario')
-router.register(r'preguntas', PreguntasViewSet, basename='preguntas')
+router.register(r'aprendiz', AprendizViewSet, basename='aprendiz')
 router.register(r'respuestas', RespuestasViewSet, basename='respuestas')
 router.register(r'proceso', ProcesoViewSet, basename='proceso')
 router.register(r'deserciones', DesercionesViewSet, basename='deserciones')
+router.register(r'comentarios', ComentarioViewSet, basename='comentarios')
 
 urlpatterns = [
     path('', include(router.urls)),  # Esto genera automáticamente las rutas CRUD

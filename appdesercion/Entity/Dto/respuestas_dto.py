@@ -5,7 +5,7 @@ import datetime
 @dataclass
 class RespuestasDTO:
     id=int
-    preguntas_id=int
+    cuestionario_id=int
     respuestas=str
     estado= bool
     fechaCreo= datetime

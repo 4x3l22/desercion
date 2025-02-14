@@ -1,0 +1,21 @@
+# Ignorar carpetas __pycache__ en cualquier nivel
+__pycache__/
+*/__pycache__/
+# Ignorar archivos compilados de Python
+*.pyc
+*.pyo
+
+# Ignorar el archivo settings.py (si es necesario)
+settings.py
+
+# Ignorar la carpeta migrations en cualquier nivel
+migrations/
+
+# Ignorar archivo Dockerfile
+Dockerfile
+
+# Ignorar archivos de .ida
+*.idea/
+
+#ignorar .env
+.env
