@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a nuestra plataforma</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header img {
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+        h1 {
+            color: #007BFF;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .content {
+            padding: 20px;
+            text-align: center;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #777;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Encabezado con imagen -->
+        <div class="header">
+            <img src="https://images.canal1.com.co/wp-content/uploads/2023/05/08164538/SENA.jpeg" alt="Bienvenido al SENA">
+        </div>
+
+        <!-- Contenido del correo -->
+        <div class="content">
+            <h1>¡Bienvenido a nuestra plataforma!</h1>
+            <p>Hola {{ email }},</p>
+            <p>Gracias por registrarte en nuestra plataforma. Estamos emocionados de tenerte con nosotros.</p>
+            <p>¡Disfruta del servicio!</p>
+        </div>
+
+        <!-- Pie de página -->
+        <div class="footer">
+            <p>Este es un correo automático, por favor no respondas.</p>
+        </div>
+    </div>
+</body>
+</html>
