@@ -1,80 +1,93 @@
-import logging
-import random
-from datetime import timedelta
-from django.utils.timezone import now
-from appdesercion.models import RecuperarContrasena, Usuario
+from appdesercion.Business.base_service import BaseService
+from appdesercion.Entity.Dao.Usuario_dao import UsuarioDAO
+from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
+from appdesercion.models import Usuario
+from django.contrib.auth.hashers import make_password, check_password
+from datetime import datetime
 from appdesercion.ulits.email_utils import EmailService
 
-logger = logging.getLogger(__name__)
 
-class UsuarioService:
-    @staticmethod
-    def solicitar_recuperacion(email: str) -> bool:
+class UsuarioService(BaseService):
+    model = Usuario
+    dao = UsuarioDAO
+
+    @classmethod
+    def crear(cls, **kwargs):
         """
-        Genera un código de recuperación y lo envía por correo.
+        Crea un nuevo usuario y envía un correo de bienvenida.
         """
-        try:
-            usuario = Usuario.objects.get(correo=email)
-        except Usuario.DoesNotExist:
-            logger.error("❌ Usuario no encontrado para recuperación: %s", email)
-            return False
+        print("🔍 kwargs recibidos:", kwargs)
 
-        # Genera un código de recuperación aleatorio
-        codigo = str(random.randint(100000, 999999))
-        expiracion = now() + timedelta(minutes=15)
+        # Hashear la contraseña si está presente
+        if "contrasena" in kwargs:
+            print("🔑 Contraseña recibida:", kwargs["contrasena"])
+            kwargs["contrasena"] = make_password(kwargs["contrasena"])
+            print("🔒 Contraseña hasheada:", kwargs["contrasena"])
 
-        # Guarda el código en la base de datos
-        RecuperarContrasena.objects.create(
-            usuario=usuario,
-            codigo=codigo,
-            expiracion=expiracion,
-            usado=False
-        )
+        # Crear la instancia del usuario
+        instance = super(UsuarioService, cls).crear(**kwargs)
+        print("🔍 Instancia creada:", instance)
 
-        # Envía el código por correo
-        try:
-            EmailService.send_password_reset_email(email, codigo)
-            logger.info("📧 Código de recuperación enviado a %s", email)
-            return True
-        except Exception as e:
-            logger.error("❌ Error al enviar el código de recuperación a %s: %s", email, str(e))
-            return False
+        # Enviar correo de bienvenida si el usuario se creó correctamente
+        if instance and "correo" in kwargs:
+            print("📧 Intentando enviar correo de bienvenida a:", kwargs["correo"])
+            EmailService.send_welcome_email(kwargs["correo"])
+
+        return instance
 
     @staticmethod
-    def validar_codigo(email: str, codigo: str) -> bool:
+    def autenticar_usuario(correo, contrasena):
         """
-        Valida el código de recuperación.
+        Autentica un usuario y devuelve sus datos si las credenciales son válidas.
         """
-        try:
-            usuario = Usuario.objects.get(correo=email)
-            recuperacion = RecuperarContrasena.objects.filter(
-                usuario=usuario,
-                codigo=codigo,
-                usado=False,
-                expiracion__gte=now()  # Verifica que el código no haya expirado
-            ).first()
+        usuario = UsuarioDAO.obtener_usuario_por_correo(correo)
 
-            if recuperacion:
-                # Marca el código como usado
-                recuperacion.usado = True
-                recuperacion.save()
-                return True
-            else:
-                return False
-        except Usuario.DoesNotExist:
-            logger.error("❌ Usuario no encontrado: %s", email)
-            return False
+        if not usuario:
+            return None  # Usuario no encontrado
 
-    @staticmethod
-    def cambiar_contrasena(email: str, nueva_contrasena: str) -> bool:
+        usuario = usuario[0]
+
+        # Verificar la contraseña
+        if check_password(contrasena, usuario["contrasena"]):
+            # Obtener las vistas asociadas al rol del usuario
+            vistas_rol = RolVistaDAO.obtener_vistas_por_rol(usuario["rol_id"])
+
+            # Convertir cada objeto MenuDto a un diccionario
+            vistas_rol_dict = [vars(vista) for vista in vistas_rol]
+
+            return {
+                "usuario_id": usuario["usuario_id"],
+                "rol_id": usuario["rol_id"],
+                "vistas_rol": vistas_rol_dict
+            }
+
+        return None  # Contraseña incorrecta
+
+    @classmethod
+    def actualizar(cls, id, **kwargs):
         """
-        Cambia la contraseña del usuario.
+        Actualiza los datos de un usuario existente.
         """
-        try:
-            usuario = Usuario.objects.get(correo=email)
-            usuario.contrasena = make_password(nueva_contrasena)
-            usuario.save()
-            return True
-        except Usuario.DoesNotExist:
-            logger.error("❌ Usuario no encontrado: %s", email)
-            return False
+        obj = cls.obtener_por_id(id)
+        if obj:
+            # Hashear la contraseña si está presente
+            if "contrasena" in kwargs:
+                kwargs["contrasena"] = make_password(kwargs["contrasena"])
+
+            # Actualizar los campos del usuario
+            for key, value in kwargs.items():
+                setattr(obj, key, value)
+
+            # Actualizar la fecha de modificación
+            obj.fechaModifico = datetime.now()
+            obj.save()
+            return obj
+
+        return None  # Usuario no encontrado
+
+    @classmethod
+    def consultar_por_correo(cls, correo):
+        """
+        Consulta un usuario por su correo electrónico.
+        """
+        return cls.model.objects.filter(correo=correo).first()
