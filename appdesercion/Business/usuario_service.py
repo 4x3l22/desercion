@@ -13,8 +13,7 @@ class UsuarioService(BaseService):
     def crear(cls, **kwargs):
 
         if "contrasena" in kwargs:
-            kwargs["contrasena"] = make_password(kwargs["contrasena"])  
-            print("🔒 Contraseña hasheada:", kwargs["contrasena"])
+            kwargs["contrasena"] = make_password(kwargs["contrasena"])
 
         # Llamar al método crear de la clase base
         instance = super(UsuarioService, cls).crear(**kwargs)  
