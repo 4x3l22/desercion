@@ -3,10 +3,12 @@ import datetime
 
 
 @dataclass
-class RespuestasDTO:
+class AprendizDTO:
     id=int
-    cuestionario_id=int
-    respuestas=str
+    nombres= str
+    apellidos= str
+    documento= str
+    proceso_id= int | None
     estado= bool
     fechaCreo= datetime
     fechaModifico= datetime | None

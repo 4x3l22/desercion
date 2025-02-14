@@ -8,7 +8,9 @@ class CuestionarioDTO:
     nombre_cuestionario= str
     descripcion= str
     usuario_id= str
-    estado= bool
+    tipo_pregunta= ['abierta', 'seleccion multiple']
+    opciones_id = int
+    textoopciones= str
     fechaCreo= datetime
     fechaModifico= datetime | None
     fechaElimino= datetime | None
