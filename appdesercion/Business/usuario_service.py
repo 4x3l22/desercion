@@ -4,7 +4,7 @@ from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
 from appdesercion.models import Usuario
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
-from appdesercion.ulits.email_utils import EmailService
+from appdesercion.ulits.email_utils import EmailService 
 
 
 class UsuarioService(BaseService):

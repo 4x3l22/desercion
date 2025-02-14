@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'desercion.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sena',
+        'NAME': 'sena1',
         'USER': 'root',
         'PASSWORD':'12345',
         'HOST': 'localhost',

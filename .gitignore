@@ -1,0 +1,11 @@
+# Ignorar carpetas __pycache__ en cualquier nivel
+__pycache__/
+
+# Ignorar el archivo settings.py (si es necesario)
+settings.py
+
+# Ignorar la carpeta migrations en cualquier nivel
+migrations/
+
+# Ignorar archivo Dockerfile
+Dockerfile

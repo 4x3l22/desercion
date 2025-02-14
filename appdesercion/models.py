@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import check_password
 
 # Create your models here.
 class Modulo(models.Model):
@@ -62,29 +63,21 @@ class RolVista(models.Model):
     class Meta:
         db_table = 'RolVista'
 
-class Persona(models.Model):
-    id = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=100)
-    documento = models.BigIntegerField(unique=True)
-    estado = models.BooleanField(default=True)
-    fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True)
-    fechaElimino = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'Persona'
-
 class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
-    persona_id = models.ForeignKey(Persona, on_delete= models.CASCADE)
-    correo = models.CharField(max_length=100)
+    correo = models.EmailField(unique=True)
     contrasena = models.TextField(blank=True, null=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
+    def verificar_contasena(self, contrasena):
+        return check_password(contrasena, self.contrasena)
+    
     class Meta: 
         db_table = 'Usuario'
 
@@ -96,6 +89,9 @@ class UsuarioRol(models.Model):
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'UsuarioRol'
 
 
 class Cuestionario(models.Model):
@@ -202,7 +198,8 @@ class RecuperarContrasena(models.Model):
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     codigo = models.CharField(max_length=10)
     expiracion = models.DateTimeField(blank=True, null=True)
-    usado = models.BooleanField(default=True)
+    usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    usado = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'RecuperarContrasena'
