@@ -9,7 +9,7 @@ from appdesercion.Business.recuperarContrasena_service import RecuperarContrasen
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuestas, Rol, \
     RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario  # ✅ Importar solo lo necesario
-from appdesercion.Apis.serializers.modulo_serializer import CuestionarioSerializers, DesercionesSerializer, \
+from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, DesercionesSerializer, \
     EnviarCodigoSerializer, ModuloSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, \
     RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
     UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
@@ -114,7 +114,7 @@ class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.save()
         return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
         
-class RecuperarContrasenaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
+class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado ModelViewSet
     queryset = RecuperarContrasena.objects.filter(usado=True)
     serializer_class = RecuperarContrasenaSerializer
     
