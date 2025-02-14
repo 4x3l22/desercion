@@ -138,7 +138,7 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado Model
         if isinstance(resultado, str): 
             return Response({"error": resultado}, status=status.HTTP_404_NOT_FOUND)
 
-        return Response({"message": "Código enviado correctamente", "codigo": resultado.codigo}, status=status.HTTP_200_OK)
+        return Response({"message": "Código enviado correctamente", "usuario_id": resultado.usuario_id.id, "codigo": resultado.codigo}, status=status.HTTP_200_OK)
     
     @swagger_auto_schema(
         request_body=VerificarCodigoSerializer, 

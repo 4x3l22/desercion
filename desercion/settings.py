@@ -82,11 +82,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Sena1',
+        'NAME': 'sena',
         'USER': 'root',
-        'PASSWORD':'12345',
-        'HOST': 'localhost',
-        'PORT': '3306'
+        'PASSWORD':'password',
+        'HOST': '127.0.0.1',
+        'PORT': '4041'
     }
 }
 
