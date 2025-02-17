@@ -9,13 +9,13 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
-from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuestas, Rol, \
-    RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario  # ✅ Importar solo lo necesario
+from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuesta, Rol, \
+    RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario, Pregunta  # ✅ Importar solo lo necesario
 from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, DesercionesSerializer, \
     EnviarCodigoSerializer, ModuloSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, \
     RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
     UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
-    ComentarioSerializer  # ✅ Importar explícitamente
+    ComentarioSerializer, PreguntaSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -172,12 +172,11 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado Model
         return Response({"message": "Vista eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Cuestionario.objects.filter(estado=True)
+    queryset = Cuestionario.objects.filter(fechaElimino__isnull=True)
     serializer_class = CuestionarioSerializers
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Cuestionario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -193,12 +192,11 @@ class AprendizViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         return Response({"message": "Aprendiz eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Respuestas.objects.filter(estado=True)
+    queryset = Respuesta.objects.filter(fechaElimino__isnull=True)
     serializer_class = RespuestasSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Respuestas eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -234,6 +232,15 @@ class ComentarioViewSet(viewsets.ModelViewSet):
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Comentario Eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
+
+class PreguntaViewSet(viewsets.ModelViewSet):
+    queryset = Pregunta.objects.filter(fechaElimino__isnull=True)
+    serializer_class = PreguntaSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.fechaElimino = timezone.now()
+        instance.save()
 class LoginView(APIView):
 
     @swagger_auto_schema(
