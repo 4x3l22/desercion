@@ -48,7 +48,7 @@ class AprendizSerializer(serializers.ModelSerializer):
 
 class RespuestasSerializer(serializers.ModelSerializer):
     class Meta:
-        model= Respuestas
+        model= Respuesta
         fields= '__all__'
 
 class ProcesoSerializer(serializers.ModelSerializer):
@@ -59,6 +59,11 @@ class ProcesoSerializer(serializers.ModelSerializer):
 class DesercionesSerializer(serializers.ModelSerializer):
     class Meta:
         model= Deserciones
+        fields= '__all__'
+
+class PreguntaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Pregunta
         fields= '__all__'
 
 class UsuarioLoginSerializer(serializers.Serializer):

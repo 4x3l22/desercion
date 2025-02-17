@@ -1,16 +1,17 @@
 from dataclasses import dataclass
 import datetime
+from typing import List
+
+from appdesercion.Entity.Dto.pregunta_dto import PreguntaDTO
 
 
 @dataclass
 class CuestionarioDTO:
     id=int
-    nombre_cuestionario= str
+    nombre= str
     descripcion= str
     usuario_id= str
-    tipo_pregunta= ['abierta', 'seleccion multiple']
-    opciones_id = int
-    textoopciones= str
+    preguntas= List[PreguntaDTO]
     fechaCreo= datetime
     fechaModifico= datetime | None
     fechaElimino= datetime | None

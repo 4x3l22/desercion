@@ -5,9 +5,10 @@ import datetime
 @dataclass
 class RespuestasDTO:
     id=int
-    cuestionario_id=int
-    respuestas=str
-    estado= bool
+    pregunta_id= int
+    usuario_id= int
+    aprendiz_id= int
+    respuestas= str
     fechaCreo= datetime
     fechaModifico= datetime | None
     fechaElimino= datetime | None
