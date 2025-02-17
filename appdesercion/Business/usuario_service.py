@@ -75,3 +75,7 @@ class UsuarioService(BaseService):
     @classmethod
     def consultar_por_correo(cls, correo):
         return cls.model.objects.filter(correo=correo).first()
+
+    @classmethod
+    def listusuarios_sin_rol(cls):
+        return cls.dao.list_usuarios_sin_rol()

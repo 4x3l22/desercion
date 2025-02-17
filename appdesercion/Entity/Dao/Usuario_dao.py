@@ -21,3 +21,8 @@ class UsuarioDAO(BaseDAO):
             columnas= [col[0] for col in cursor.description]
             resultados= [dict(zip(columnas, fila)) for fila in cursor.fetchall()]
         return resultados
+
+    @staticmethod
+    def list_usuarios_sin_rol():
+        usuarios_sin_rol = Usuario.objects.filter(usuariorol__isnull=True).distinct()
+        return usuarios_sin_rol
