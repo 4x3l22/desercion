@@ -95,31 +95,31 @@ class UsuarioRol(models.Model):
 
 class Cuestionario(models.Model):
     id = models.AutoField(primary_key=True)
-    nombre_cuestionario = models.CharField(max_length=100)
+    nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
-    usuariio_id = models.ForeignKey(Usuario, on_delete= models.CASCADE)
-    tipo_pregunta = models.CharField(
-        max_length=20,
-        choices=[
-            ('abierta', 'Abierta'),
-            ('seleccion multiple', 'Seleccion multiple'),
-        ]
-    )
-    opciones_id = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='opciones'
-    )
-    textoopciones = models.TextField(blank=True, null=True)
-    estado = models.BooleanField(default=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         db_table = 'Cuestionario'
+
+class Pregunta(models.Model):
+    id = models.AutoField(primary_key=True)
+    cuestionario = models.ForeignKey(Cuestionario, on_delete=models.CASCADE, related_name="preguntas")
+    texto = models.TextField()
+    tipo = models.CharField(
+        max_length=20,
+        choices=[('abierta', 'Abierta'), ('seleccion multiple', 'Seleccion multiple')]
+    )
+    opciones = models.JSONField(blank=True, null=True)
+    fechaCreo = models.DateTimeField(auto_now_add=True)
+    fechaModifico = models.DateTimeField(auto_now=True)
+    fechaElimino = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'Pregunta'
 
 class Proceso(models.Model):
     id = models.AutoField(primary_key=True)
@@ -188,14 +188,15 @@ class Aprendiz(models.Model):
     class Meta:
         db_table = 'Aprendiz'
 
-class Respuestas(models.Model):
+class Respuesta(models.Model):
     id = models.AutoField(primary_key=True)
-    cuestionario_id = models.ForeignKey(Cuestionario, on_delete= models.CASCADE)
-    repuestas = models.TextField(blank=True, null=True)
-    estado = models.BooleanField(default=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE, related_name="respuestas")
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, related_name="respuestas")
+    respuesta = models.TextField(blank=True, null=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
 
     class Meta:
-        db_table = 'Respuestas'
+        db_table = 'Respuesta'
