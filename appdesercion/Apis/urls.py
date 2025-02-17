@@ -21,6 +21,6 @@ router.register(r'comentarios', ComentarioViewSet, basename='comentarios')
 router.register(r'pregunta', PreguntaViewSet, basename='pregunta')
 
 urlpatterns = [
-    path('', include(router.urls)),  # Esto genera automáticamente las rutas CRUD
-    path('login/', LoginView.as_view(), name='login'),  # Ruta personalizada para el login
+    path('', include(router.urls)),
+    path('login/', LoginView.as_view(), name='login'),
 ]

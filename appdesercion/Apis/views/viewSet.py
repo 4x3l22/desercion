@@ -1,5 +1,3 @@
-from http.client import responses
-
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -102,7 +100,16 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
-    
+
+    @action(detail=False, methods=['get'])
+    def usuario_sin_rol(self, request):
+        usuarios_sin_rol = UsuarioService.listusuarios_sin_rol()
+
+        if not usuarios_sin_rol.exists():
+            return Response({"message": "No hay usuarios sin rol"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = UsuarioSerializer(usuarios_sin_rol, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     
 class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
@@ -164,7 +171,7 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado Model
 
         return Response({"message": "Código verificado correctamente"}, status=status.HTTP_200_OK)
     
-    def destroy(self, request, *args, **kwargs):
+    def destroy(self):
         instance = self.get_object()
         instance.estado = False
         instance.fechaElimino = timezone.now()
@@ -236,11 +243,6 @@ class ComentarioViewSet(viewsets.ModelViewSet):
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.filter(fechaElimino__isnull=True)
     serializer_class = PreguntaSerializer
-
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.fechaElimino = timezone.now()
-        instance.save()
 class LoginView(APIView):
 
     @swagger_auto_schema(
