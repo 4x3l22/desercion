@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'appdesercion',
     'rest_framework',
-    'drf_yasg'
+    'drf_yasg',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
