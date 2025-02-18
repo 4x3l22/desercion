@@ -29,7 +29,6 @@ class BaseService:
     def eliminar(cls, id):
         obj = cls.obtener_por_id(id)
         if obj:
-            obj.estado = False
             obj.fechaElimino = datetime.now()
             obj.save()
             return True

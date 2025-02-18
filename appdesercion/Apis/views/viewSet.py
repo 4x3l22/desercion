@@ -80,7 +80,6 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
             apellidos=data.get("apellidos"),
             documento=data.get("documento"),
             contrasena=data.get("contrasena"),
-            estado=data.get("estado", True),
         )
         serializer = self.get_serializer(usuario)
         return Response(serializer.data, status=status.HTTP_201_CREATED)

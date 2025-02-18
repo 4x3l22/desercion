@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives  # Para enviar correos con HTML
+from django.core.mail import EmailMultiAlternatives, send_mail  # Para enviar correos con HTML
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
