@@ -11,7 +11,6 @@ class UsuarioDTO:
     apellidos= str
     tip_documento= str
     documento= int
-    estado: bool
     fechaCreo: datetime
     fechaModifico: datetime | None # type: ignore
     fechaElimino: datetime | None # type: ignore

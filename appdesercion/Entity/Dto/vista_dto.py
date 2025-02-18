@@ -11,7 +11,7 @@ class VistaDTO:
     descripcion: str
     icono: str
     ruta: str
-    estado: bool
+    
     fechaCreo: datetime
     fechaModifico: datetime | None # type: ignore
     fechaElimino: datetime | None # type: ignore
