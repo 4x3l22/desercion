@@ -1,6 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
@@ -74,13 +75,20 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     def create(self, request, *args, **kwargs):
         """Sobrescribe el método create para usar UsuarioService."""
         data = request.data
+        tipo_documento_id = data.get("tipoDocumento")  # Clave corregida
+
+        # Convertir el ID en una instancia de TipoDocumento
+        tipo_documento = get_object_or_404(TipoDocumento, id=tipo_documento_id)
+
         usuario = UsuarioService.crear(
             correo=data.get("correo"),
             nombres=data.get("nombres"),
             apellidos=data.get("apellidos"),
             documento=data.get("documento"),
             contrasena=data.get("contrasena"),
+            tipoDocumento=tipo_documento,  # Pasamos la instancia
         )
+
         serializer = self.get_serializer(usuario)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     

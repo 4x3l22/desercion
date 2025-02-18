@@ -9,7 +9,7 @@ class UsuarioDTO:
     contrasena= str
     nombres= str
     apellidos= str
-    tip_documento= str
+    tipoDocumento_id= int
     documento= int
     fechaCreo: datetime
     fechaModifico: datetime | None # type: ignore

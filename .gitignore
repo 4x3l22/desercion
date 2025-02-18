@@ -20,3 +20,4 @@ Dockerfile
 
 #ignorar .env
 .env
+requirements.txt
