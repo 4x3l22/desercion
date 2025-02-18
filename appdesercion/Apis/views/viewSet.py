@@ -16,51 +16,47 @@ from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, De
     ComentarioSerializer, PreguntaSerializer, TipoDocumentoSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
-    queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
+    queryset = Modulo.objects.filter(fechaElimino__isnull=True)  # Filtra solo los activos
     serializer_class = ModuloSerializer
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Módulo eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
 
 class VistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Vista.objects.filter(estado=True)
+    queryset = Vista.objects.filter(fechaElimino__isnull=True)
     serializer_class = VistaSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Vista eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
 
 class RolVistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = RolVista.objects.filter(estado=True)
+    queryset = RolVista.objects.filter(fechaElimino__isnull=True)
     serializer_class = RolVistaSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Rol vista eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class RolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Rol.objects.filter(estado=True)
+    queryset = Rol.objects.filter(fechaElimino__isnull=True)
     serializer_class = RolSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Usuario.objects.filter(estado=True)
+    queryset = Usuario.objects.filter(fechaElimino__isnull=True)
     serializer_class = UsuarioSerializer
 
     def create(self, request, *args, **kwargs):
@@ -96,7 +92,6 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -116,11 +111,11 @@ class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = UsuarioRol.objects.filter(fechaElimino__isnull=True)
     serializer_class = UsuarioRolSerializer
 
-    # def destroy(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     instance.fechaElimino = timezone.now()
-    #     instance.save()
-    #     return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.fechaElimino = timezone.now()
+        instance.save()
+        return Response({"message": "Usuario Rol eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
         
 class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado ModelViewSet
     queryset = RecuperarContrasena.objects.filter(usado=True)
@@ -173,7 +168,6 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado Model
     
     def destroy(self):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Vista eliminada correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -219,12 +213,11 @@ class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         return Response({"message": "Proceso eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
     
 class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
-    queryset = Deserciones.objects.filter(estado=True)
+    queryset = Deserciones.objects.filter(fechaElimino__isnull=True)
     serializer_class = DesercionesSerializer
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Deserciones eliminadas correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
@@ -235,7 +228,6 @@ class ComentarioViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        instance.estado = False
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Comentario Eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
