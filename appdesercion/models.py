@@ -7,7 +7,7 @@ class Modulo(models.Model):
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True, null=True)
     icono = models.TextField(blank=True, null=True)
-    estado = models.BooleanField(default=True)
+    
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
@@ -25,7 +25,7 @@ class Vista(models.Model):
     descripcion = models.TextField(blank=True, null=True)
     icono = models.TextField(blank=True, null=True)
     ruta = models.TextField(blank=True, null=True)
-    estado = models.BooleanField(default=True)
+    
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
@@ -40,7 +40,7 @@ class Rol(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     descripcion = models.TextField(blank=True, null=True)
-    estado = models.BooleanField(default=True)
+    
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
@@ -55,7 +55,6 @@ class RolVista(models.Model):
     id = models.AutoField(primary_key=True)
     rol_id = models.ForeignKey(Rol, on_delete= models.CASCADE)
     vista_id = models.ForeignKey(Vista, on_delete= models.CASCADE)
-    estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
@@ -82,7 +81,7 @@ class Usuario(models.Model):
     apellidos = models.CharField(max_length=100)
     tipoDocumento = models.ForeignKey(TipoDocumento, on_delete = models.CASCADE, null=True)
     documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
-    estado = models.BooleanField(default=True)
+    
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
@@ -97,7 +96,7 @@ class UsuarioRol(models.Model):
     id = models.AutoField(primary_key=True)
     usuario_id =models.ForeignKey(Usuario, on_delete=models.CASCADE)
     rol_id = models.ForeignKey(Rol, on_delete=models.CASCADE)
-    estado = models.BooleanField(default=True)
+    
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
@@ -157,7 +156,7 @@ class Deserciones(models.Model):
     id = models.AutoField(primary_key=True)
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     proceso_id = models.ForeignKey(Proceso, on_delete=models.CASCADE)
-    estado = models.BooleanField(default=True)
+    
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
