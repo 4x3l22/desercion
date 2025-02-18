@@ -8,7 +8,6 @@ class AprendizDTO:
     nombres= str
     apellidos= str
     documento= str
-    proceso_id= int | None
     estado= bool
     fechaCreo= datetime
     fechaModifico= datetime | None

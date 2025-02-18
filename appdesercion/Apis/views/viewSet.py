@@ -18,6 +18,9 @@ from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, De
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(fechaElimino__isnull=True)  # Filtra solo los activos
     serializer_class = ModuloSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
     
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -29,6 +32,9 @@ class VistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Vista.objects.filter(fechaElimino__isnull=True)
     serializer_class = VistaSerializer
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.fechaElimino = timezone.now()
@@ -39,6 +45,9 @@ class RolVistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = RolVista.objects.filter(fechaElimino__isnull=True)
     serializer_class = RolVistaSerializer
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.fechaElimino = timezone.now()
@@ -48,6 +57,9 @@ class RolVistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class RolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Rol.objects.filter(fechaElimino__isnull=True)
     serializer_class = RolSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -110,6 +122,9 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = UsuarioRol.objects.filter(fechaElimino__isnull=True)
     serializer_class = UsuarioRolSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -176,6 +191,9 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Cuestionario.objects.filter(fechaElimino__isnull=True)
     serializer_class = CuestionarioSerializers
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.fechaElimino = timezone.now()
@@ -185,6 +203,9 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class AprendizViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Aprendiz.objects.filter(fechaElimino__isnull=True)
     serializer_class = AprendizSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -196,6 +217,9 @@ class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Respuesta.objects.filter(fechaElimino__isnull=True)
     serializer_class = RespuestasSerializer
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.fechaElimino = timezone.now()
@@ -205,6 +229,9 @@ class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Proceso.objects.filter(fechaElimino__isnull=True)
     serializer_class = ProcesoSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -216,6 +243,9 @@ class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Deserciones.objects.filter(fechaElimino__isnull=True)
     serializer_class = DesercionesSerializer
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.fechaElimino = timezone.now()
@@ -226,6 +256,9 @@ class ComentarioViewSet(viewsets.ModelViewSet):
     queryset = Comentario.objects.filter(fechaElimino__isnull=True)
     serializer_class = ComentarioSerializer
 
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.fechaElimino = timezone.now()
@@ -235,6 +268,9 @@ class ComentarioViewSet(viewsets.ModelViewSet):
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.filter(fechaElimino__isnull=True)
     serializer_class = PreguntaSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
 class LoginView(APIView):
 
     @swagger_auto_schema(
@@ -263,6 +299,9 @@ class LoginView(APIView):
 class TipoDocumentoViewSet(viewsets.ModelViewSet):
     queryset = TipoDocumento.objects.filter(fechaElimino__isnull=True)
     serializer_class = TipoDocumentoSerializer
+
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs, partial=True)
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
