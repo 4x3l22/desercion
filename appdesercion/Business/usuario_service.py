@@ -1,6 +1,7 @@
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.Usuario_dao import UsuarioDAO
 from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
+from appdesercion.Entity.Dto.dto_personalizado.usuariosinrol_dto import UsuarioSinRolDTO
 from appdesercion.models import  Usuario
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
@@ -78,4 +79,18 @@ class UsuarioService(BaseService):
 
     @classmethod
     def listusuarios_sin_rol(cls):
-        return cls.dao.list_usuarios_sin_rol()
+        usuarios_sin_rol_query = UsuarioDAO.list_usuarios_sin_rol()
+
+        usuarios_sin_rol = [
+            UsuarioSinRolDTO(
+                id=usuario['id'],
+                nombres=usuario['nombres'],
+                apellidos=usuario['apellidos'],
+                correo=usuario['correo'],
+                documento=usuario['documento'],
+                tipoDocumento_nombre=usuario['tipoDocumento__nombre']
+            )
+            for usuario in usuarios_sin_rol_query
+        ]
+
+        return usuarios_sin_rol

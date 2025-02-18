@@ -1,6 +1,7 @@
 from django.db import connection
 from appdesercion.Entity.Dao.base_dao import BaseDAO
 from appdesercion.models import Usuario
+from django.db.models import Q
 
 
 class UsuarioDAO(BaseDAO):
@@ -24,5 +25,8 @@ class UsuarioDAO(BaseDAO):
 
     @staticmethod
     def list_usuarios_sin_rol():
-        usuarios_sin_rol = Usuario.objects.filter(usuariorol__isnull=True).distinct()
-        return usuarios_sin_rol
+        return Usuario.objects.filter(
+            Q(usuariorol__isnull=True)
+        ).select_related('tipoDocumento').values(
+            'id', 'nombres', 'apellidos', 'correo', 'documento', 'tipoDocumento__nombre'
+        )

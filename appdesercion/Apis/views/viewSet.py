@@ -112,11 +112,10 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     def usuario_sin_rol(self, request):
         usuarios_sin_rol = UsuarioService.listusuarios_sin_rol()
 
-        if not usuarios_sin_rol.exists():
-            return Response({"message": "No hay usuarios sin rol"}, status=status.HTTP_404_NOT_FOUND)
+        if not usuarios_sin_rol:
+            return Response({'message': 'No hay usuarios sin rol'}, status=status.HTTP_204_NO_CONTENT)
 
-        serializer = UsuarioSerializer(usuarios_sin_rol, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response([usuario.__dict__ for usuario in usuarios_sin_rol], status=status.HTTP_200_OK)
 
     
 class UsuarioRolViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
