@@ -81,3 +81,8 @@ class ComentarioSerializer(serializers.ModelSerializer):
     class Meta:
         model= Comentario
         fields= '__all__'
+
+class TipoDocumentoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= TipoDocumento
+        fields= '__all__'
