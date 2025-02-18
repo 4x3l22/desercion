@@ -91,15 +91,21 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 
         serializer = self.get_serializer(usuario)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()
+        instance = self.get_object()  # Obtiene el usuario actual
         data = request.data
+
+        # Obtener el tipoDocumento de la solicitud o mantener el actual
+        tipo_documento_id = data.get("tipoDocumento")
+        tipo_documento = get_object_or_404(TipoDocumento,
+                                           id=tipo_documento_id) if tipo_documento_id else instance.tipoDocumento
 
         usuario_actualizado = UsuarioService.actualizar(
             instance.id,
             correo=data.get("correo", instance.correo),
-            contrasena=data.get("contrasena") if "contrasena" in data else None
+            contrasena=data.get("contrasena") if "contrasena" in data else None,
+            tipoDocumento=tipo_documento  # Mantenemos o actualizamos el tipo de documento
         )
 
         if usuario_actualizado:
