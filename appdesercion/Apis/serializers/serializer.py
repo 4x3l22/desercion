@@ -45,6 +45,9 @@ class AprendizSerializer(serializers.ModelSerializer):
     class Meta:
         model= Aprendiz
         fields= '__all__'
+        extra_kwargs = {
+            'fechaElimino': {'read_only': True}
+        }
 
 class RespuestasSerializer(serializers.ModelSerializer):
     class Meta:

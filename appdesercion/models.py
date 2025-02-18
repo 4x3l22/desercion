@@ -132,9 +132,23 @@ class Pregunta(models.Model):
     class Meta:
         db_table = 'Pregunta'
 
+class Aprendiz(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombres = models.CharField(max_length=100)
+    apellidos = models.CharField(max_length=100)
+    tipoDocumento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE, null=True)
+    documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
+    fechaCreo = models.DateTimeField(auto_now_add=True)
+    fechaModifico = models.DateTimeField(auto_now=True)
+    fechaElimino = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'Aprendiz'
+
 class Proceso(models.Model):
     id = models.AutoField(primary_key=True)
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='procesos_creados')
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, null=True)
     cuestionario_id = models.ForeignKey(Cuestionario, on_delete=models.CASCADE, related_name='procesos')
     estado_aprobacion = models.CharField(
         max_length=20,
@@ -185,19 +199,6 @@ class Comentario(models.Model):
 
     class Meta:
         db_table = 'Comentario'
-
-class Aprendiz(models.Model):
-    id = models.AutoField(primary_key=True)
-    nombres = models.CharField(max_length=100)
-    apellidos = models.CharField(max_length=100)
-    documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
-    proceso_id = models.ForeignKey(Proceso, on_delete= models.CASCADE, null=True)
-    fechaCreo = models.DateTimeField(auto_now_add=True)
-    fechaModifico = models.DateTimeField(auto_now=True)
-    fechaElimino = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        db_table = 'Aprendiz'
 
 class Respuesta(models.Model):
     id = models.AutoField(primary_key=True)
