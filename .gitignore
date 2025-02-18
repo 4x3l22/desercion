@@ -13,6 +13,7 @@ __pycache__/
 
 # Ignorar archivo Dockerfile
 Dockerfile
+.dockerignore
 
 # Ignorar archivos de .ida
 *.idea/
