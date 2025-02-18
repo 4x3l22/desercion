@@ -91,8 +91,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         usuario_actualizado = UsuarioService.actualizar(
             instance.id,
             correo=data.get("correo", instance.correo),
-            contrasena=data.get("contrasena") if "contrasena" in data else None,
-            estado=data.get("estado", instance.estado)
+            contrasena=data.get("contrasena") if "contrasena" in data else None
         )
 
         if usuario_actualizado:
@@ -108,7 +107,7 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         return Response({"message": "Usuario eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
 
     @action(detail=False, methods=['get'])
-    def usuario_sin_rol(self, request):
+    def usuario_sin_rol(self):
         usuarios_sin_rol = UsuarioService.listusuarios_sin_rol()
 
         if not usuarios_sin_rol:
