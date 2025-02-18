@@ -2,7 +2,8 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from appdesercion.Apis.views.viewSet import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, \
     ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, \
-    UsuarioRolViewSet, UsuarioViewSet, VistaViewSet, AprendizViewSet, ComentarioViewSet, PreguntaViewSet
+    UsuarioRolViewSet, UsuarioViewSet, VistaViewSet, AprendizViewSet, ComentarioViewSet, PreguntaViewSet, \
+    TipoDocumentoViewSet
 
 router = DefaultRouter()
 router.register(r'modulos', ModuloViewSet, basename='modulo')
@@ -19,6 +20,7 @@ router.register(r'proceso', ProcesoViewSet, basename='proceso')
 router.register(r'deserciones', DesercionesViewSet, basename='deserciones')
 router.register(r'comentarios', ComentarioViewSet, basename='comentarios')
 router.register(r'pregunta', PreguntaViewSet, basename='pregunta')
+router.register(r'documento', TipoDocumentoViewSet, basename='documento')
 
 urlpatterns = [
     path('', include(router.urls)),

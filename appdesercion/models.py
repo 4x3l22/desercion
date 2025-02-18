@@ -63,12 +63,24 @@ class RolVista(models.Model):
     class Meta:
         db_table = 'RolVista'
 
+class TipoDocumento(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField(blank=True, null=True)
+    fechaCreo = models.DateTimeField(auto_now_add=True)
+    fechaModifico = models.DateTimeField(auto_now=True)
+    fechaElimino = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'TipoDocumento'
+
 class Usuario(models.Model):
     id = models.AutoField(primary_key=True)
     correo = models.EmailField(unique=True)
     contrasena = models.TextField(blank=True, null=True)
     nombres = models.CharField(max_length=100)
     apellidos = models.CharField(max_length=100)
+    tipoDocumento = models.ForeignKey(TipoDocumento, on_delete = models.CASCADE, null=True)
     documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
     estado = models.BooleanField(default=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)

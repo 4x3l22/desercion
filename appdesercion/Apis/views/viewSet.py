@@ -8,12 +8,12 @@ from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuesta, Rol, \
-    RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario, Pregunta  # ✅ Importar solo lo necesario
+    RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario, Pregunta, TipoDocumento  # ✅ Importar solo lo necesario
 from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, DesercionesSerializer, \
     EnviarCodigoSerializer, ModuloSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, \
     RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
     UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
-    ComentarioSerializer, PreguntaSerializer  # ✅ Importar explícitamente
+    ComentarioSerializer, PreguntaSerializer, TipoDocumentoSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(estado=True)  # Filtra solo los activos
@@ -267,3 +267,14 @@ class LoginView(APIView):
             return Response({"error": "Credenciales incorrectas"}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class TipoDocumentoViewSet(viewsets.ModelViewSet):
+    queryset = TipoDocumento.objects.filter(fechaElimino__isnull=True)
+    serializer_class = TipoDocumentoSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.fechaElimino = timezone.now()
+        instance.save()
+
+        return Response({'message':'Tipo de documento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)

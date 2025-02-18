@@ -9,6 +9,7 @@ class UsuarioDTO:
     contrasena= str
     nombres= str
     apellidos= str
+    tip_documento= str
     documento= int
     estado: bool
     fechaCreo: datetime
