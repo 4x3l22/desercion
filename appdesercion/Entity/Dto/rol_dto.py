@@ -7,7 +7,7 @@ class RolDTO:
     id: int
     nombre: str
     descripcion: str
-    estado: bool
+    
     fechaCreo: datetime
     fechaModifico: datetime | None # type: ignore
     fechaElimino: datetime | None # type: ignore
