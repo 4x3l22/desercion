@@ -18,9 +18,17 @@ class RolSerializer(serializers.ModelSerializer):
         }
 
 class RolVistaSerializer(serializers.ModelSerializer):
+    vista_rol = serializers.CharField(read_only=True)
+    vista_nombre = serializers.CharField(read_only=True)
     class Meta:
         model= RolVista
-        fields= '__all__'
+        fields= [
+            "id",
+            "rol_id_id",
+            "vista_rol",
+            "vista_id_id",
+            "vista_nombre"
+        ]
         extra_kwargs = {
             'fechaElimino': {'read_only': True}
         }
@@ -51,9 +59,18 @@ class UsuarioRolSerializer(serializers.ModelSerializer):
         }
 
 class VistaSerializer(serializers.ModelSerializer):
+    nombre_modulo = serializers.CharField(source="modulo_id.nombre", read_only=True)
     class Meta:
         model= Vista
-        fields= '__all__'
+        fields= [
+            "id",
+            "nombre",
+            "descripcion",
+            "icono",
+            "ruta",
+            "modulo_id",
+            "nombre_modulo",
+        ]
         extra_kwargs = {
             'fechaElimino': {'read_only': True}
         }

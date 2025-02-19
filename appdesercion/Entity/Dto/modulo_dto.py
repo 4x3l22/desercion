@@ -8,7 +8,6 @@ class ModuloDTO:
     nombre: str
     descripcion: str
     icono: str
-    
     fechaCreo: datetime
     fechaModifico: datetime | None # type: ignore
     fechaElimino: datetime | None # type: ignore

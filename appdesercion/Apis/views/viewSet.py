@@ -10,6 +10,8 @@ from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.Entity.Dao.aprendiz_dao import AprendizDAO
+from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
+from appdesercion.Entity.Dao.vista_dao import VistaDAO
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuesta, Rol, \
     RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario, Pregunta, TipoDocumento  # ✅ Importar solo lo necesario
 from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, DesercionesSerializer, \
@@ -36,6 +38,9 @@ class VistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Vista.objects.filter(fechaElimino__isnull=True)
     serializer_class = VistaSerializer
 
+    def get_queryset(self):
+        return VistaDAO.obtener_datos()
+
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
 
@@ -48,6 +53,9 @@ class VistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class RolVistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = RolVista.objects.filter(fechaElimino__isnull=True)
     serializer_class = RolVistaSerializer
+
+    def get_queryset(self):
+        return RolVistaDAO.obtener_datos()
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
