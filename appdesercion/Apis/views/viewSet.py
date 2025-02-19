@@ -10,6 +10,7 @@ from django.utils import timezone  # ✅ Importar timezone correctamente
 
 from appdesercion.Business.cuestionario_service import CuestionarioService
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
+from appdesercion.Business.respuestas_service import RespuestasService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.Entity.Dao.aprendiz_dao import AprendizDAO
 from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
@@ -298,6 +299,15 @@ class AprendizViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class RespuestasViewSet(viewsets.ModelViewSet):
     queryset = Respuesta.objects.filter(fechaElimino__isnull=True)
     serializer_class = RespuestasSerializer
+
+    def create(self, request, *args, **kwargs):
+        datos = request.data  # Recibe la lista de respuestas
+
+        if not isinstance(datos, list):  # Validar si los datos son un array
+            return Response({"error": "Se espera un array de respuestas."}, status=400)
+
+        resultado = RespuestasService.guardar_respuestas(datos)
+        return Response(resultado["data"], status=resultado["status"])
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
