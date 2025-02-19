@@ -2,13 +2,14 @@ from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.Usuario_dao import UsuarioDAO
 from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
 from appdesercion.Entity.Dto.dto_personalizado.usuariosinrol_dto import UsuarioSinRolDTO
+from appdesercion.Entity.Dto.usuario_dto import UsuarioDTO
 from appdesercion.models import  Usuario
 from django.contrib.auth.hashers import make_password, check_password
 from datetime import datetime
 from appdesercion.utils.email_utils import EmailService 
 
 class UsuarioService(BaseService):
-    model=Usuario
+    model=UsuarioDTO
     dao=UsuarioDAO
 
     @classmethod

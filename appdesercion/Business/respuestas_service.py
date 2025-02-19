@@ -1,8 +1,8 @@
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.respuestas_dao import RespuestasDAO
-from appdesercion.models import Respuestas
+from appdesercion.Entity.Dto.respuestas_dto import RespuestasDTO
 
 
 class RespuestasService(BaseService):
-    model=Respuestas
+    model=RespuestasDTO
     dao=RespuestasDAO

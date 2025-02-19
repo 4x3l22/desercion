@@ -1,7 +1,8 @@
 from appdesercion.Business.base_service import BaseService
-from appdesercion.models import Deserciones
+from appdesercion.Entity.Dao.deserciones_dto import DesercionesDAO
+from appdesercion.Entity.Dto.deserciones_dto import DesercionesDTO
 
 
 class DesercionesService(BaseService):
-    model=Deserciones
-    dao=Deserciones
+    model=DesercionesDTO
+    dao=DesercionesDAO

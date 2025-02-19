@@ -1,6 +1,6 @@
 from appdesercion.Entity.Dao.base_dao import BaseDAO
-from appdesercion.models import UsuarioRol
+from appdesercion.Entity.Dto.usuarioRol_dto import UsuarioRolDTO
 
 
 class UsuarioRolDAO(BaseDAO):
-    model=UsuarioRol
+    model=UsuarioRolDTO
