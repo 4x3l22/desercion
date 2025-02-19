@@ -218,7 +218,7 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     @swagger_auto_schema(
         manual_parameters=[
             openapi.Parameter(
-                "cuestionario_id",  # ✅ Nombre correcto del parámetro
+                "cuestionario_id",
                 openapi.IN_QUERY,
                 description="Id del cuestionario",
                 type=openapi.TYPE_INTEGER,
@@ -229,23 +229,22 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     )
     @action(detail=False, methods=["get"], url_path="cuestionariosid")
     def listar_cuestionarios(self, request):
-        cuestionario_id = request.query_params.get("cuestionario_id")  # ✅ Obtener id desde query params
+        cuestionario_id = request.GET.get("cuestionario_id")
 
         if not cuestionario_id:
-            return Response({"error": "El parámetro 'cuestionario_id' es requerido"}, status=400)
+            return Response({"error": "Se requiere el parámetro 'cuestionario_id'."}, status=400)
 
         try:
-            cuestionario_id = int(cuestionario_id)  # ✅ Convertir a entero
+            cuestionario_id = int(cuestionario_id)  # Convertir a entero
         except ValueError:
-            return Response({"error": "El parámetro 'cuestionario_id' debe ser un número entero"}, status=400)
+            return Response({"error": "El parámetro 'cuestionario_id' debe ser un número."}, status=400)
 
         cuestionario = CuestionarioService.obtener_cuestionarios(cuestionario_id)
 
         if not cuestionario:
-            return Response({"error": "No se encontró un cuestionario con ese id."}, status=404)
+            return Response({"error": "No se encontró un cuestionario con ese ID."}, status=404)
 
-        serializer = CuestionarioSerializers(cuestionario, many=True)  # ✅ Serializar respuesta
-        return Response(serializer.data, status=200)
+        return Response([item.__dict__ for item in cuestionario], status=200)
 
 
     def update(self, request, *args, **kwargs):

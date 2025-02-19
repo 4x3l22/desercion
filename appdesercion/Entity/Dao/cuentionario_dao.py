@@ -18,7 +18,7 @@ class CuentionarioDAO(BaseDAO):
                     p.id AS pregunta_id,
                     p.texto AS pregunta_texto,
                     p.tipo AS pregunta_tipo,
-                    p.opciones AS pregunta_opciones,
+                    p.opciones AS pregunta_opciones
                 FROM sena.Cuestionario AS c
                 INNER JOIN sena.Pregunta AS p ON p.cuestionario_id = c.id
                 WHERE c.id = %s;
