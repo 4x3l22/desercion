@@ -128,3 +128,16 @@ class TipoDocumentoSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'fechaElimino': {'read_only': True}
         }
+
+class ConsultarDocumentoSerializer(serializers.ModelSerializer):
+    tipoDocumento_nombre = serializers.CharField(source="tipoDocumento.nombre", read_only=True)
+
+    class Meta:
+        model = Aprendiz
+        fields = ["id",
+                  "nombres",
+                  "apellidos",
+                  "documento",
+                  "tipoDocumento",
+                  "tipoDocumento_nombre"
+                  ]

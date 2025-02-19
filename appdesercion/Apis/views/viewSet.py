@@ -1,3 +1,4 @@
+from drf_yasg import openapi
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework.views import APIView
@@ -8,13 +9,15 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
+from appdesercion.Entity.Dao.aprendiz_dao import AprendizDAO
 from appdesercion.models import Cuestionario, Deserciones, Modulo, Proceso, RecuperarContrasena, Respuesta, Rol, \
     RolVista, Usuario, UsuarioRol, Vista, Aprendiz, Comentario, Pregunta, TipoDocumento  # ✅ Importar solo lo necesario
 from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, DesercionesSerializer, \
     EnviarCodigoSerializer, ModuloSerializer, ProcesoSerializer, RecuperarContrasenaSerializer, \
     RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
     UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
-    ComentarioSerializer, PreguntaSerializer, TipoDocumentoSerializer  # ✅ Importar explícitamente
+    ComentarioSerializer, PreguntaSerializer, TipoDocumentoSerializer, \
+    ConsultarDocumentoSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(fechaElimino__isnull=True)  # Filtra solo los activos
@@ -223,8 +226,34 @@ class AprendizViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Aprendiz eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "documento",
+                openapi.IN_QUERY,
+                description="Número de documento del aprendiz",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ],
+        responses={200: "exitoso", 400: "El documento es requerido.", 404: "No se encontró un aprendiz con ese documento."}
+    )
+    @action(detail=False, methods=["get"], url_path="documento")
+    def buscar_por_documento(self, request):
+        documento = request.query_params.get("documento")
+        if not documento:
+            return Response({"error": "El documento es requerido."}, status=status.HTTP_400_BAD_REQUEST)
+
+        aprendiz = AprendizDAO.consultar_por_documento(documento)
+        if not aprendiz:
+            return Response({"error": "No se encontró un aprendiz con ese documento."},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ConsultarDocumentoSerializer(aprendiz)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-class RespuestasViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
+class RespuestasViewSet(viewsets.ModelViewSet):
     queryset = Respuesta.objects.filter(fechaElimino__isnull=True)
     serializer_class = RespuestasSerializer
 

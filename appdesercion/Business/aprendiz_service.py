@@ -6,3 +6,7 @@ from appdesercion.models import Aprendiz
 class AprendizService(BaseService):
     model=Aprendiz
     dao=AprendizDAO
+
+    @classmethod
+    def consultar_por_documento(documento):
+        return Aprendiz.objects.filter(documento=documento).first()

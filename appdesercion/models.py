@@ -143,7 +143,6 @@ class Aprendiz(models.Model):
 class Proceso(models.Model):
     id = models.AutoField(primary_key=True)
     usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='procesos_creados')
-    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, null=True)
     cuestionario_id = models.ForeignKey(Cuestionario, on_delete=models.CASCADE, related_name='procesos')
     estado_aprobacion = models.CharField(
         max_length=20,
