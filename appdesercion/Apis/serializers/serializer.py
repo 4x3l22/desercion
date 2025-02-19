@@ -98,9 +98,13 @@ class AprendizSerializer(serializers.ModelSerializer):
         }
 
 class RespuestasSerializer(serializers.ModelSerializer):
+    usuario = serializers.PrimaryKeyRelatedField(queryset=Usuario.objects.all())  # Permite IDs
+    pregunta = serializers.PrimaryKeyRelatedField(queryset=Pregunta.objects.all())
+    aprendiz = serializers.PrimaryKeyRelatedField(queryset=Aprendiz.objects.all())
+
     class Meta:
-        model= Respuesta
-        fields= '__all__'
+        model = Respuesta
+        fields = "__all__"
         extra_kwargs = {
             'fechaElimino': {'read_only': True}
         }
