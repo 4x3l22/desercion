@@ -8,7 +8,7 @@ from appdesercion.models import RolVista
 
 
 class RolVistaDAO(BaseDAO):
-    model=RolVistaDTO
+    model=RolVista
 
     @staticmethod
     def obtener_vistas_por_rol(rol_id):

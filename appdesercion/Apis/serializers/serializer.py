@@ -41,6 +41,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             "id",
             "correo",
             "nombres",
+            "contrasena",
             "apellidos",
             "documento",
             "tipoDocumento",
@@ -167,3 +168,6 @@ class ConsultarDocumentoSerializer(serializers.ModelSerializer):
                   "tipoDocumento",
                   "tipoDocumento_nombre"
                   ]
+
+# class CuestionarioIdSerializer(serializers.serializer):
+#     cuestionario_id = serializers.IntegerField()

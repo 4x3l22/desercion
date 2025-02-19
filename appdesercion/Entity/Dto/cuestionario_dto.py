@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-import datetime
+from datetime import datetime
 from typing import List
 
 from appdesercion.Entity.Dto.pregunta_dto import PreguntaDTO

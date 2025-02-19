@@ -4,7 +4,7 @@ from appdesercion.models import Aprendiz
 
 
 class AprendizDAO(BaseDAO):
-    model=AprendizDTO
+    model=Aprendiz
 
     @staticmethod
     def consultar_por_documento(documento):

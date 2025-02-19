@@ -1,9 +1,10 @@
 from appdesercion.Entity.Dao.base_dao import BaseDAO
 from appdesercion.Entity.Dto.recuperarcontrasena_dto import RecuperarContrasenaDTO
+from appdesercion.models import RecuperarContrasena
 
 
 class RecuperarContrasenaDAO(BaseDAO):
-    model=RecuperarContrasenaDTO
+    model=RecuperarContrasena
     
     @classmethod
     def obtener_por_codigo(cls, codigo, usuario_id):

@@ -1,12 +1,11 @@
 from django.db.models import F
 
 from appdesercion.Entity.Dao.base_dao import BaseDAO
-from appdesercion.Entity.Dto.vista_dto import VistaDTO
 from appdesercion.models import Vista
 
 
 class VistaDAO(BaseDAO):
-    model = VistaDTO
+    model = Vista
 
     @staticmethod
     def obtener_datos():
