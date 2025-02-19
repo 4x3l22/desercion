@@ -7,6 +7,6 @@ class CuestionarioService(BaseService):
     model=CuestionarioDTO
     dao=CuentionarioDAO
 
-    @classmethod
+    @staticmethod
     def obtener_cuestionarios(cuestionario_id):
         return CuentionarioDAO.list_cuestionarios(cuestionario_id)
