@@ -9,4 +9,3 @@ class AprendizService(BaseService):
 
     @classmethod
     def consultar_por_documento(documento):
-        return AprendizDTO.objects.filter(documento=documento).first()
