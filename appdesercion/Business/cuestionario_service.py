@@ -6,3 +6,7 @@ from appdesercion.Entity.Dto.cuestionario_dto import CuestionarioDTO
 class CuestionarioService(BaseService):
     model=CuestionarioDTO
     dao=CuentionarioDAO
+
+    @classmethod
+    def obtener_cuestionarios(cuestionario_id):
+        return CuentionarioDAO.list_cuestionarios(cuestionario_id)

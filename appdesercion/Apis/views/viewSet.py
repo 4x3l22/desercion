@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
+
+from appdesercion.Business.cuestionario_service import CuestionarioService
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.Entity.Dao.aprendiz_dao import AprendizDAO
@@ -212,6 +214,39 @@ class RecuperarContrasenaViewSet(viewsets.GenericViewSet):  # ✅ Cambiado Model
 class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Cuestionario.objects.filter(fechaElimino__isnull=True)
     serializer_class = CuestionarioSerializers
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "cuestionario_id",  # ✅ Nombre correcto del parámetro
+                openapi.IN_QUERY,
+                description="Id del cuestionario",
+                type=openapi.TYPE_INTEGER,
+                required=True
+            )
+        ],
+        responses={200: "exitoso", 404: "No se encontró un cuestionario con ese id."}
+    )
+    @action(detail=False, methods=["get"], url_path="cuestionariosid")
+    def listar_cuestionarios(self, request):
+        cuestionario_id = request.query_params.get("cuestionario_id")  # ✅ Obtener id desde query params
+
+        if not cuestionario_id:
+            return Response({"error": "El parámetro 'cuestionario_id' es requerido"}, status=400)
+
+        try:
+            cuestionario_id = int(cuestionario_id)  # ✅ Convertir a entero
+        except ValueError:
+            return Response({"error": "El parámetro 'cuestionario_id' debe ser un número entero"}, status=400)
+
+        cuestionario = CuestionarioService.obtener_cuestionarios(cuestionario_id)
+
+        if not cuestionario:
+            return Response({"error": "No se encontró un cuestionario con ese id."}, status=404)
+
+        serializer = CuestionarioSerializers(cuestionario, many=True)  # ✅ Serializar respuesta
+        return Response(serializer.data, status=200)
+
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)

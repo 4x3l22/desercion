@@ -6,4 +6,4 @@ from appdesercion.models import Modulo
 
 class ModuloDAO(BaseDAO):
 
-   model = ModuloDTO
+   model = Modulo
