@@ -1,11 +1,12 @@
 from django.db import connection
 from appdesercion.Entity.Dao.base_dao import BaseDAO
+from appdesercion.Entity.Dto.usuario_dto import UsuarioDTO
 from appdesercion.models import Usuario
 from django.db.models import Q
 
 
 class UsuarioDAO(BaseDAO):
-    model=Usuario
+    model=UsuarioDTO
 
     @staticmethod
     def obtener_usuario_por_correo(correo):

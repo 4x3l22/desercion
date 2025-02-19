@@ -1,13 +1,13 @@
 from datetime import datetime
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.modulo_dao import ModuloDAO
-from appdesercion.models import Modulo
+from appdesercion.Entity.Dto.modulo_dto import ModuloDTO
 
 
 class ModuloService(BaseService):
 
     dao=ModuloDAO
-    model=Modulo
+    model=ModuloDTO
 
     # def crear_modulo(self, nombre, descripcion, icono):
     #     modulo = Modulo(

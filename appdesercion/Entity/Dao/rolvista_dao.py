@@ -1,11 +1,11 @@
 from django.db import connection
 from appdesercion.Entity.Dao.base_dao import BaseDAO
 from appdesercion.Entity.Dto.menu_dto import MenuDto
-from appdesercion.models import RolVista
+from appdesercion.Entity.Dto.rolVista_dto import RolVistaDTO
 
 
 class RolVistaDAO(BaseDAO):
-    model=RolVista
+    model=RolVistaDTO
 
     @staticmethod
     def obtener_vistas_por_rol(rol_id):

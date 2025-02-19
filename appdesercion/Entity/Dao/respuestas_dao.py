@@ -1,6 +1,6 @@
 from appdesercion.Entity.Dao.base_dao import BaseDAO
-from appdesercion.models import Respuestas
+from appdesercion.Entity.Dto.respuestas_dto import RespuestasDTO
 
 
 class RespuestasDAO(BaseDAO):
-    model=Respuestas
+    model=RespuestasDTO

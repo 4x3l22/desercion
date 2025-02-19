@@ -3,12 +3,12 @@ import random
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.recuperarcontrasena_dao import RecuperarContrasenaDAO
-from appdesercion.models import RecuperarContrasena
+from appdesercion.Entity.Dto.recuperarcontrasena_dto import RecuperarContrasenaDTO
 from appdesercion.utils.email_utils import EmailService
 
 
 class RecuperarContrasenaService(BaseService):
-    model=RecuperarContrasena
+    model=RecuperarContrasenaDTO
     dao=RecuperarContrasenaDAO
     
     @classmethod

@@ -1,8 +1,8 @@
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.rol_dao import RolDAO
-from appdesercion.models import Vista
+from appdesercion.Entity.Dto.vista_dto import VistaDTO
 
 
 class RolService(BaseService):
     dao=RolDAO
-    model=Vista
+    model=VistaDTO

@@ -1,6 +1,6 @@
 from appdesercion.Entity.Dao.base_dao import BaseDAO
-from appdesercion.models import Proceso
+from appdesercion.Entity.Dto.proceso_dto import ProcesoDTO
 
 
 class ProcesoDAO(BaseDAO):
-    model=Proceso
+    model=ProcesoDTO
