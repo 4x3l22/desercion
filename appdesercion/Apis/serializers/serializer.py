@@ -26,9 +26,18 @@ class RolVistaSerializer(serializers.ModelSerializer):
         }
 
 class UsuarioSerializer(serializers.ModelSerializer):
+    tipoDocumento_nombre = serializers.CharField(source="tipoDocumento.nombre", read_only=True)
     class Meta:
         model= Usuario
-        fields= '__all__'
+        fields = [
+            "id",
+            "correo",
+            "nombres",
+            "apellidos",
+            "documento",
+            "tipoDocumento",
+            "tipoDocumento_nombre"
+        ]
         extra_kwargs = {
             'fechaElimino': {'read_only': True}
         }

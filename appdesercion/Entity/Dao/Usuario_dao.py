@@ -31,3 +31,7 @@ class UsuarioDAO(BaseDAO):
         ).select_related('tipoDocumento').values(
             'id', 'nombres', 'apellidos', 'correo', 'documento', 'tipoDocumento__nombre'
         )
+
+    @staticmethod
+    def obtener_datos(cls):
+        return cls.model.objects.select_related('tipoDocumento').all()
