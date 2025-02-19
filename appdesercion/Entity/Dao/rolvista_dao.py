@@ -1,7 +1,10 @@
 from django.db import connection
+from django.db.models import F
+
 from appdesercion.Entity.Dao.base_dao import BaseDAO
 from appdesercion.Entity.Dto.menu_dto import MenuDto
 from appdesercion.Entity.Dto.rolVista_dto import RolVistaDTO
+from appdesercion.models import RolVista
 
 
 class RolVistaDAO(BaseDAO):
@@ -28,3 +31,12 @@ class RolVistaDAO(BaseDAO):
             columnas = [col[0] for col in cursor.description]
             resultados = [MenuDto(**dict(zip(columnas, fila))) for fila in cursor.fetchall()]
         return resultados
+
+    @staticmethod
+    def obtener_datos():
+        return RolVista.objects.select_related('vista', 'rol').annotate(
+            vista_rol=F('rol_id__nombre'),
+            vista_nombre=F('vista_id__nombre')
+        ).values(
+            "id", "rol_id_id", "vista_rol", "vista_id_id", "vista_nombre"
+        )
