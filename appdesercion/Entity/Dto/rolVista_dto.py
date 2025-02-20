@@ -4,10 +4,7 @@ from datetime import datetime
 
 @dataclass
 class RolVistaDTO:
-    id: int
     rol_id: int
+    nombre_rol: str
     vista_id: int
-    
-    fechaCreo: datetime
-    fechaModifico: datetime | None # type: ignore
-    fechaElimino: datetime | None # type: ignore
+    nombre_vista: str

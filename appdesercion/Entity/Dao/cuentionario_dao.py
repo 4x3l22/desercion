@@ -1,10 +1,6 @@
-from django.contrib.admin.templatetags.admin_list import results
-
 from appdesercion.Entity.Dao.base_dao import BaseDAO
 from appdesercion.Entity.Dto.cuestionario_dto import CuestionarioDTO
 from django.db import connection
-
-from appdesercion.Entity.Dto.dto_personalizado.procesos_dto import ProcesosCuestionariosDTO
 
 
 class CuentionarioDAO(BaseDAO):

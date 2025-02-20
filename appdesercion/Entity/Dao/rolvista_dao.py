@@ -34,9 +34,18 @@ class RolVistaDAO(BaseDAO):
 
     @staticmethod
     def obtener_datos():
-        return RolVista.objects.select_related('vista', 'rol').annotate(
-            vista_rol=F('rol_id__nombre'),
-            vista_nombre=F('vista_id__nombre')
-        ).values(
-            "id", "rol_id_id", "vista_rol", "vista_id_id", "vista_nombre"
-        )
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT R.id AS rol_id,
+                       R.nombre AS nombre_rol,
+                       V.id AS vista_id,
+                       V.nombre AS nombre_vista
+                FROM sena.RolVista AS RV
+                INNER JOIN sena.Rol AS R on RV.rol_id_id = R.id
+                INNER JOIN sena.Vista AS V on RV.vista_id_id = V.id
+                WHERE RV.fechaElimino IS NULL 
+            """)
+            columns = [col[0] for col in cursor.description]
+            result = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
+        return result
