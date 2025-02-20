@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
+from yaml import serialize
 
 from appdesercion.Business.cuestionario_service import CuestionarioService
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
@@ -247,6 +248,19 @@ class CuestionarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 
         return Response([item.__dict__ for item in cuestionario], status=200)
 
+    @action(detail=False, methods=["get"], url_path="list_all_questionnaries")
+    def listar_all_questionnaries(self, request):
+        try:
+            cuestionarios = CuestionarioService.list_all_questionnaries()
+
+            if not cuestionarios:
+                return Response({'message': 'No hay cuestionarios disponibles'}, status=status.HTTP_204_NO_CONTENT)
+
+            cuestionarios_dict = [vars(cuestionario) for cuestionario in cuestionarios]
+
+            return Response(cuestionarios_dict, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
