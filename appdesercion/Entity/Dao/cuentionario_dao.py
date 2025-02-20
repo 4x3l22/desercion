@@ -19,7 +19,8 @@ class CuentionarioDAO(BaseDAO):
                     p.opciones AS pregunta_opciones
                 FROM sena.Cuestionario AS c
                 INNER JOIN sena.Pregunta AS p ON p.cuestionario_id = c.id
-                WHERE c.id = %s;
+                WHERE c.id = %s
+                ORDER BY p.id ASC;
             """, [cuestionario_id])
             columns = [col[0] for col in cursor.description]
             results = [dict(zip(columns, fila)) for fila in cursor.fetchall()]
@@ -38,7 +39,8 @@ class CuentionarioDAO(BaseDAO):
                     p.opciones AS pregunta_opciones
                 FROM sena.Cuestionario AS c
                 INNER JOIN sena.Pregunta AS p ON p.cuestionario_id = c.id
-                WHERE c.fechaElimino IS NULL ;
+                WHERE c.fechaElimino IS NULL 
+                ORDER BY p.id ASC;
             """)
             columns = [col[0] for col in cursor.description]
             result = [dict(zip(columns, row)) for row in cursor.fetchall()]
