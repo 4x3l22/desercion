@@ -133,6 +133,7 @@ class Aprendiz(models.Model):
     apellidos = models.CharField(max_length=100)
     tipoDocumento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE, null=True)
     documento = models.CharField(max_length=10, unique=True, null=False, blank=False)
+    correo = models.EmailField(unique=True, null=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
