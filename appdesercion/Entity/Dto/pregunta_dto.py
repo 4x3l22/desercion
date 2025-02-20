@@ -4,8 +4,7 @@ from typing import List, Optional
 
 @dataclass
 class PreguntaDTO:
-    id= int
-    cuestionario_id= int
+    cuestionario= int
     texto= str
     tipo= str
     opciones= Optional[List[str]]

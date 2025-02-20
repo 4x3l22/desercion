@@ -395,15 +395,21 @@ class PreguntaViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         datos = request.data
 
-        if not datos:
-            return Response({'error': 'Se espera un array de preguntas.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Si los datos son un diccionario (una sola pregunta), conviértelo en una lista
+        if isinstance(datos, dict):
+            datos = [datos]
 
-        resultado = PreguntaService.save_question(datos)  # Corrección: llamar el método correctamente
+        if not isinstance(datos, list):  # Validar que sean lista de preguntas
+            return Response({"error": "Se espera un array o un objeto de pregunta."}, status=status.HTTP_400_BAD_REQUEST)
+
+        resultado = PreguntaService.save_question(datos)
 
         if "error" in resultado:
             return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
 
-        return Response(resultado["data"], status=status.HTTP_201_CREATED)
+        # Serializar las preguntas guardadas antes de enviarlas como respuesta
+        serializer = PreguntaSerializer(resultado["data"], many=True)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
