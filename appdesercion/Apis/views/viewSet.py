@@ -1,3 +1,5 @@
+from dataclasses import asdict
+
 from drf_yasg import openapi
 from rest_framework.decorators import action
 from rest_framework import viewsets
@@ -10,8 +12,10 @@ from django.utils import timezone  # ✅ Importar timezone correctamente
 from yaml import serialize
 
 from appdesercion.Business.cuestionario_service import CuestionarioService
+from appdesercion.Business.pregunta_service import PreguntaService
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.respuestas_service import RespuestasService
+from appdesercion.Business.rolVista_service import RolVistaService
 from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.Entity.Dao.aprendiz_dao import AprendizDAO
 from appdesercion.Entity.Dao.rolvista_dao import RolVistaDAO
@@ -58,8 +62,19 @@ class RolVistaViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = RolVista.objects.filter(fechaElimino__isnull=True)
     serializer_class = RolVistaSerializer
 
-    def get_queryset(self):
-        return RolVistaDAO.obtener_datos()
+    def list(self, request):
+        try:
+            vistarol = RolVistaService.obtener_datos()  # Ahora sí recibe objetos DTO
+
+            if not vistarol:
+                return Response({'error': 'No hay contenido'}, status=status.HTTP_204_NO_CONTENT)
+
+            # ✅ Ahora `asdict()` funcionará correctamente
+            rolvista_dict = [asdict(rolvista) for rolvista in vistarol]
+            return Response(rolvista_dict, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
@@ -113,12 +128,14 @@ class UsuarioViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 
         # Obtener el tipoDocumento de la solicitud o mantener el actual
         tipo_documento_id = data.get("tipoDocumento")
-        tipo_documento = get_object_or_404(TipoDocumento,
-                                           id=tipo_documento_id) if tipo_documento_id else instance.tipoDocumento
+        tipo_documento = get_object_or_404(TipoDocumento, id=tipo_documento_id) if tipo_documento_id else instance.tipoDocumento
 
         usuario_actualizado = UsuarioService.actualizar(
             instance.id,
             correo=data.get("correo", instance.correo),
+            nombres=data.get("nombres", instance.nombres),
+            apellidos=data.get("apellidos", instance.apellidos),
+            documento=data.get("documento", instance.documento),
             contrasena=data.get("contrasena") if "contrasena" in data else None,
             tipoDocumento=tipo_documento  # Mantenemos o actualizamos el tipo de documento
         )
@@ -320,7 +337,7 @@ class RespuestasViewSet(viewsets.ModelViewSet):
         if not isinstance(datos, list):  # Validar si los datos son un array
             return Response({"error": "Se espera un array de respuestas."}, status=400)
 
-        resultado = RespuestasService.guardar_respuestas(datos)
+        resultado = RespuestasService.guardar_respuestas
         return Response(resultado["data"], status=resultado["status"])
 
     def update(self, request, *args, **kwargs):
@@ -374,6 +391,19 @@ class ComentarioViewSet(viewsets.ModelViewSet):
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.filter(fechaElimino__isnull=True)
     serializer_class = PreguntaSerializer
+
+    def create(self, request, *args, **kwargs):
+        datos = request.data
+
+        if not datos:
+            return Response({'error': 'Se espera un array de preguntas.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        resultado = PreguntaService.save_question(datos)  # Corrección: llamar el método correctamente
+
+        if "error" in resultado:
+            return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(resultado["data"], status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)

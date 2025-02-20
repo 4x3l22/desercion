@@ -10,6 +10,7 @@ class RespuestasService(BaseService):
     model=RespuestasDTO
     dao=RespuestasDAO
 
+    @property
     def guardar_respuestas(datos):
         respuestas = []
         try:

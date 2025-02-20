@@ -18,17 +18,9 @@ class RolSerializer(serializers.ModelSerializer):
         }
 
 class RolVistaSerializer(serializers.ModelSerializer):
-    vista_rol = serializers.CharField(read_only=True)
-    vista_nombre = serializers.CharField(read_only=True)
     class Meta:
         model= RolVista
-        fields= [
-            "id",
-            "rol_id_id",
-            "vista_rol",
-            "vista_id_id",
-            "vista_nombre"
-        ]
+        fields= '__all__'
         extra_kwargs = {
             'fechaElimino': {'read_only': True}
         }
