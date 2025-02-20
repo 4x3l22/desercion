@@ -117,7 +117,7 @@ class Pregunta(models.Model):
     texto = models.TextField()
     tipo = models.CharField(
         max_length=20,
-        choices=[('abierta', 'Abierta'), ('seleccion multiple', 'Seleccion multiple')]
+        choices=[('respuesta corta', 'Respuesta corta'), ('respuesta larga', 'Respuesta larga'), ('verdadero falso','Verdadero falso'),('seleccion multiple', 'Seleccion multiple')]
     )
     opciones = models.JSONField(blank=True, null=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
