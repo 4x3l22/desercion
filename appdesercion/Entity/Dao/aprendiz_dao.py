@@ -8,4 +8,4 @@ class AprendizDAO(BaseDAO):
 
     @staticmethod
     def consultar_por_documento(documento):
-        return AprendizDTO.objects.select_related('tipoDocumento').filter(documento=documento).first()
+        return Aprendiz.objects.select_related('tipoDocumento').filter(documento=documento).first()

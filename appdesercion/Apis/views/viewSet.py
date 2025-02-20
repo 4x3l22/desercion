@@ -332,13 +332,21 @@ class RespuestasViewSet(viewsets.ModelViewSet):
     serializer_class = RespuestasSerializer
 
     def create(self, request, *args, **kwargs):
-        datos = request.data  # Recibe la lista de respuestas
+        datos = request.data
 
-        if not isinstance(datos, list):  # Validar si los datos son un array
-            return Response({"error": "Se espera un array de respuestas."}, status=400)
+        if  isinstance(datos, dict):
+            datos = [datos]
 
-        resultado = RespuestasService.guardar_respuestas
-        return Response(resultado["data"], status=resultado["status"])
+        if not isinstance(datos, list):
+            return Response({"error": "se espera un array o un objeto de respuesat"}, status=status.HTTP_400_BAD_REQUEST)
+
+        resultado = RespuestasService.guardar_respuestas(datos)
+
+        if "error" in resultado:
+            return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = RespuestasSerializer(resultado["data"], many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
@@ -395,11 +403,10 @@ class PreguntaViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         datos = request.data
 
-        # Si los datos son un diccionario (una sola pregunta), conviértelo en una lista
         if isinstance(datos, dict):
             datos = [datos]
 
-        if not isinstance(datos, list):  # Validar que sean lista de preguntas
+        if not isinstance(datos, list):
             return Response({"error": "Se espera un array o un objeto de pregunta."}, status=status.HTTP_400_BAD_REQUEST)
 
         resultado = PreguntaService.save_question(datos)
@@ -407,7 +414,6 @@ class PreguntaViewSet(viewsets.ModelViewSet):
         if "error" in resultado:
             return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Serializar las preguntas guardadas antes de enviarlas como respuesta
         serializer = PreguntaSerializer(resultado["data"], many=True)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

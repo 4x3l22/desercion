@@ -10,17 +10,17 @@ class RespuestasService(BaseService):
     model=RespuestasDTO
     dao=RespuestasDAO
 
-    @property
+    @staticmethod
     def guardar_respuestas(datos):
         respuestas = []
         try:
-            with transaction.atomic():  # Garantiza que todo se guarde correctamente
+            with transaction.atomic():
                 for dato in datos:
                     usuario = Usuario.objects.get(id=dato["usuario"])
                     pregunta = Pregunta.objects.get(id=dato["pregunta"])
                     aprendiz = Aprendiz.objects.get(id=dato["aprendiz"])
 
-                    respuesta = Respuesta(
+                    respuesta = Respuesta.objects.create(
                         respuesta=dato["respuesta"],
                         usuario=usuario,
                         pregunta=pregunta,
@@ -28,9 +28,7 @@ class RespuestasService(BaseService):
                     )
                     respuestas.append(respuesta)
 
-                # Llama al DAO para guardar las respuestas
-                RespuestasDAO.guardar_respuestas(respuestas)
-
-            return {"data": {"message": "Respuestas guardadas correctamente."}, "status": 201}
-        except Usuario.DoesNotExist:
-            return {"data": {"error": "Algún usuario no existe."}, "status": 400}
+                # RespuestasDAO.guardar_respuestas(respuestas)
+            return {"data": respuestas}
+        except Exception as e:
+            return {"error": str(e)}
