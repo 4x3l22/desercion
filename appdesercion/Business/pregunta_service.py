@@ -16,17 +16,15 @@ class PreguntaService(BaseService):
         try:
             with transaction.atomic():
                 for pregunta in datos:
-                    # cuestionario = Cuestionario.objects.get(id=pregunta["cuestionario_id"])  # Ajuste: El modelo correcto
-                    pregunta_dto = PreguntaDTO(  # Cambié el nombre para mayor claridad
-                        # id=pregunta['id'],
-                        cuestionario_id=pregunta['cuestionario_id'],
+                    cuestionario = Cuestionario.objects.get(id=pregunta["cuestionario"])
+                    pregunta_obj = Pregunta.objects.create(
+                        cuestionario=cuestionario,
                         texto=pregunta['texto'],
                         tipo=pregunta['tipo'],
                         opciones=pregunta['opciones']
                     )
-                    preguntas.append(pregunta_dto)  # Corregido: Se agregan los objetos DTO a la lista
+                    preguntas.append(pregunta_obj)
 
-                PreguntaDAO.save_question(preguntas)
-            return {'data': preguntas}  # Corrección en la clave de retorno
+            return {'data': preguntas}
         except Exception as e:
-            return {"error": str(e)}  # Corrección en la estructura de error
+            return {"error": str(e)}
