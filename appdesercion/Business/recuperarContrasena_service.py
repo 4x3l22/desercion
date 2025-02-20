@@ -4,11 +4,12 @@ from appdesercion.Business.usuario_service import UsuarioService
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.recuperarcontrasena_dao import RecuperarContrasenaDAO
 from appdesercion.Entity.Dto.recuperarcontrasena_dto import RecuperarContrasenaDTO
+from appdesercion.models import RecuperarContrasena
 from appdesercion.utils.email_utils import EmailService
 
 
 class RecuperarContrasenaService(BaseService):
-    model=RecuperarContrasenaDTO
+    model=RecuperarContrasena
     dao=RecuperarContrasenaDAO
     
     @classmethod
