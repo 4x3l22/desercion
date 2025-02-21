@@ -52,7 +52,8 @@ class UsuarioService(BaseService):
 
             return {
                 "usuario_id": usuario["usuario_id"],
-                "rol_id": usuario["rol_id"], 
+                "rol_id": usuario["rol_id"],
+                "nombre_rol": usuario["nombre_rol"],
                 "vistas_rol": vistas_rol_dict
             }
         return None 
