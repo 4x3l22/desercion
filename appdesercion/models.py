@@ -143,8 +143,9 @@ class Aprendiz(models.Model):
 
 class Proceso(models.Model):
     id = models.AutoField(primary_key=True)
-    usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='procesos_creados')
-    cuestionario_id = models.ForeignKey(Cuestionario, on_delete=models.CASCADE, related_name='procesos')
+    usuario_id = models.ForeignKey(Usuario, on_delete=models.CASCADE)
+    cuestionario_id = models.ForeignKey(Cuestionario, on_delete=models.CASCADE,)
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, null=True)
     estado_aprobacion = models.CharField(
         max_length=20,
         choices=[
@@ -198,7 +199,6 @@ class Respuesta(models.Model):
     id = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
-    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE)
     respuesta = models.TextField(blank=True, null=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)

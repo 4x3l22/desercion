@@ -28,7 +28,6 @@ class RespuestasService(BaseService):
                     )
                     respuestas.append(respuesta)
 
-                # RespuestasDAO.guardar_respuestas(respuestas)
             return {"data": respuestas}
         except Exception as e:
             return {"error": str(e)}
