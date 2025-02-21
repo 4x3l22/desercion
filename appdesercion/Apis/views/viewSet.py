@@ -13,6 +13,7 @@ from yaml import serialize
 
 from appdesercion.Business.cuestionario_service import CuestionarioService
 from appdesercion.Business.pregunta_service import PreguntaService
+from appdesercion.Business.proceso_service import ProcesoService
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
 from appdesercion.Business.respuestas_service import RespuestasService
 from appdesercion.Business.rolVista_service import RolVistaService
@@ -369,6 +370,33 @@ class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.fechaElimino = timezone.now()
         instance.save()
         return Response({"message": "Proceso eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
+
+    @action(detail=False, methods=["get"], url_path="data")
+    def data_proces(self, request):
+        try:
+            data_proces = ProcesoService.obtener_procesos()
+
+            if not data_proces:
+                return Response({"message": "no hay procesos"}, status=status.HTTP_400_BAD_REQUEST)
+
+            data_proces_dict = [
+                {
+                    **vars(proces),
+                    "preguntas": [
+                        {
+                            **vars(pregunta),
+                            "respuestas": [vars(respuesta) for respuesta in pregunta.respuestas]
+                            # Convierte AnswerDTO en diccionario
+                        }
+                        for pregunta in proces.preguntas
+                    ]
+                }
+                for proces in data_proces
+            ]
+
+            return Response(data_proces_dict, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Deserciones.objects.filter(fechaElimino__isnull=True)
