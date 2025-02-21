@@ -18,17 +18,14 @@ class RespuestasService(BaseService):
                 for dato in datos:
                     usuario = Usuario.objects.get(id=dato["usuario"])
                     pregunta = Pregunta.objects.get(id=dato["pregunta"])
-                    aprendiz = Aprendiz.objects.get(id=dato["aprendiz"])
 
                     respuesta = Respuesta.objects.create(
                         respuesta=dato["respuesta"],
                         usuario=usuario,
-                        pregunta=pregunta,
-                        aprendiz=aprendiz
+                        pregunta=pregunta
                     )
                     respuestas.append(respuesta)
 
-                # RespuestasDAO.guardar_respuestas(respuestas)
             return {"data": respuestas}
         except Exception as e:
             return {"error": str(e)}
