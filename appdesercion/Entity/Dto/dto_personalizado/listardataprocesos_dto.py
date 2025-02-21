@@ -21,6 +21,9 @@ class ListaProcesosCuestionariosDTO:
     correo_usuario: str
     nombres_usuario: str
     apellidos_usuario: str
+    nombre_aprendiz: str
+    apellidos_aprendiz: str
+    documento_aprendiz: str
     numero_documento_usuario: int
     cuestionario_nombre: str
     cuestionario_descripcion: str

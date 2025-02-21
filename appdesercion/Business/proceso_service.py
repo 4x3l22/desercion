@@ -10,8 +10,8 @@ class ProcesoService(BaseService):
     dao=ProcesoDAO
 
     @classmethod
-    def obtener_procesos(cls):
-        query = cls.dao.list_proceso()
+    def obtener_procesos(cls, approved_status):
+        query = cls.dao.list_proceso(approved_status)
 
         procesos_dict = {}
 
@@ -27,6 +27,9 @@ class ProcesoService(BaseService):
                     nombres_usuario=proc["nombres_usuario"],
                     apellidos_usuario=proc["apellidos_usuario"],
                     numero_documento_usuario=proc["numero_documento_usuario"],
+                    nombre_aprendiz=proc["nombre_aprendiz"],
+                    apellidos_aprendiz=proc["apellidos_aprendiz"],
+                    documento_aprendiz=proc["documento_aprendiz"],
                     cuestionario_nombre=proc["cuestionario_nombre"],
                     cuestionario_descripcion=proc["cuestionario_descripcion"],
                     preguntas=[]

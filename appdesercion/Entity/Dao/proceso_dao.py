@@ -9,7 +9,7 @@ class ProcesoDAO(BaseDAO):
 
 
     @staticmethod
-    def list_proceso():
+    def list_proceso(approved_status):
         with connection.cursor() as cursor:
             cursor.execute("""
                 SELECT
@@ -20,6 +20,10 @@ class ProcesoDAO(BaseDAO):
                     U.nombres AS nombres_usuario, 
                     U.apellidos AS apellidos_usuario, 
                     U.documento AS numero_documento_usuario,
+                    
+                    A.nombres As nombre_aprendiz,
+                    A.apellidos As apellidos_aprendiz,
+                    A.documento AS documento_aprendiz,
                     
                     C.nombre AS cuestionario_nombre, 
                     C.descripcion AS cuestionario_descripcion,
@@ -32,12 +36,14 @@ class ProcesoDAO(BaseDAO):
                     R.id AS respuesta_id, 
                     R.respuesta AS respuesta_texto
                 FROM sena.Proceso AS P
-                INNER JOIN sena.Usuario U on P.usuario_id_id = U.id
                 INNER JOIN sena.Cuestionario C on P.cuestionario_id_id = C.id
                 INNER JOIN sena.Pregunta P2 on C.id = P2.cuestionario_id
                 INNER JOIN sena.Respuesta R on P2.id = R.pregunta_id
+                INNER JOIN sena.Usuario U on U.id = R.usuario_id
+                INNER JOIN sena.Aprendiz A on A.id = R.aprendiz_id 
                 WHERE P.fechaElimino IS NULL
-            """)
+                AND P.estado_aprobacion = %s;
+            """, [approved_status])
             columns = [col[0] for col in cursor.description]
             results = [dict(zip(columns, row)) for row in cursor.fetchall()]
 

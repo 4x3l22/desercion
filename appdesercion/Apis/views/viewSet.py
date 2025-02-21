@@ -371,10 +371,31 @@ class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         instance.save()
         return Response({"message": "Proceso eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)  # ✅ Mensaje corregido
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "approved_status",
+                openapi.IN_QUERY,
+                description="nombre del rol que aprueba el proceso",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ],
+        responses={200: "Exitoso", 400: "No hay data"}
+    )
     @action(detail=False, methods=["get"], url_path="data")
     def data_proces(self, request):
         try:
-            data_proces = ProcesoService.obtener_procesos()
+            approved_status = request.query_params.get("approved_status")
+
+            # Validar que el parámetro no esté vacío
+            if not approved_status:
+                return Response(
+                    {"message": "El parámetro 'approved_status' es requerido"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            data_proces = ProcesoService.obtener_procesos(approved_status)
 
             if not data_proces:
                 return Response({"message": "no hay procesos"}, status=status.HTTP_400_BAD_REQUEST)
@@ -386,7 +407,6 @@ class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
                         {
                             **vars(pregunta),
                             "respuestas": [vars(respuesta) for respuesta in pregunta.respuestas]
-                            # Convierte AnswerDTO en diccionario
                         }
                         for pregunta in proces.preguntas
                     ]
