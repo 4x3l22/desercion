@@ -1,8 +1,10 @@
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.proceso_dao import ProcesoDAO
+from django.db import transaction
 from appdesercion.Entity.Dto.dto_personalizado.listardataprocesos_dto import ListaProcesosCuestionariosDTO, QuestionDTO, \
     AnswerDTO
 from appdesercion.Entity.Dto.proceso_dto import ProcesoDTO
+from appdesercion.models import Usuario, Cuestionario, Aprendiz, Proceso
 
 
 class ProcesoService(BaseService):
@@ -61,3 +63,37 @@ class ProcesoService(BaseService):
 
         # Convertimos el diccionario en una lista de objetos DTO
         return list(procesos_dict.values())
+
+    @classmethod
+    def registrar_proceso(cls, datos):
+        try:
+            aprendiz_id = datos.get("aprendiz")
+            cuestionario_id = datos.get("cuestionario_id")
+            usuario_id = datos.get("usuario_id")
+
+            if not usuario_id:
+                return {"error": "El campo usuario_id es obligatorio."}
+
+            if ProcesoDAO.existe_proceso(aprendiz_id, cuestionario_id):
+                return {"error": "Ya existe un proceso en ejecución para este aprendiz y cuestionario."}
+
+            with transaction.atomic():
+                try:
+                    usuario = Usuario.objects.get(id=usuario_id)
+                except Usuario.DoesNotExist:
+                    return {"error": f"El usuario con ID {usuario_id} no existe."}
+
+                aprendiz, _ = Aprendiz.objects.get_or_create(id=aprendiz_id)
+                cuestionario, _ = Cuestionario.objects.get_or_create(id=cuestionario_id)
+
+                proceso = Proceso.objects.create(
+                    estado_aprobacion=datos["estado_aprobacion"],
+                    usuario_id=usuario,
+                    cuestionario_id=cuestionario, 
+                    aprendiz=aprendiz
+                )
+
+            return {"data": {"id": proceso.id, "estado_aprobacion": proceso.estado_aprobacion}}
+
+        except Exception as e:
+            return {"error": str(e)}

@@ -48,3 +48,7 @@ class ProcesoDAO(BaseDAO):
             results = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
         return results
+
+    @staticmethod
+    def existe_proceso(aprendiz_id, cuestionario_id):
+        return Proceso.objects.filter(aprendiz_id=aprendiz_id,cuestionario_id=cuestionario_id).exists()
