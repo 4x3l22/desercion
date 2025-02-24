@@ -89,7 +89,7 @@ class ProcesoService(BaseService):
                 proceso = Proceso.objects.create(
                     estado_aprobacion=datos["estado_aprobacion"],
                     usuario_id=usuario,
-                    cuestionario_id=cuestionario, 
+                    cuestionario_id=cuestionario,
                     aprendiz=aprendiz
                 )
 

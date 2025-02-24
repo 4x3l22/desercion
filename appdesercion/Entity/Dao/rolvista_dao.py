@@ -36,10 +36,11 @@ class RolVistaDAO(BaseDAO):
     def obtener_datos():
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT R.id AS rol_id,
-                       R.nombre AS nombre_rol,
-                       V.id AS vista_id,
-                       V.nombre AS nombre_vista
+                SELECT RV.id AS rolvista_id,
+                    R.id AS rol_id,
+                    R.nombre AS nombre_rol,
+                   V.id AS vista_id,
+                   V.nombre AS nombre_vista
                 FROM sena.RolVista AS RV
                 INNER JOIN sena.Rol AS R on RV.rol_id_id = R.id
                 INNER JOIN sena.Vista AS V on RV.vista_id_id = V.id
