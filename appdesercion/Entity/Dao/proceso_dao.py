@@ -42,7 +42,8 @@ class ProcesoDAO(BaseDAO):
                 INNER JOIN sena.Usuario U on U.id = R.usuario_id
                 INNER JOIN sena.Aprendiz A on A.id = P.aprendiz_id 
                 WHERE P.fechaElimino IS NULL
-                AND P.estado_aprobacion = %s;
+                AND P.estado_aprobacion = %s
+                AND R.aprendiz_id = P.aprendiz_id;
             """, [approved_status])
             columns = [col[0] for col in cursor.description]
             results = [dict(zip(columns, row)) for row in cursor.fetchall()]
