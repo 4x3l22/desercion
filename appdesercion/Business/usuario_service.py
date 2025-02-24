@@ -16,7 +16,6 @@ class UsuarioService(BaseService):
         """
         Crea un nuevo usuario y envía un correo de bienvenida.
         """
-        print("🔍 kwargs recibidos:", kwargs)
 
         # Hashear la contraseña si está presente
         if "contrasena" in kwargs:
@@ -24,11 +23,10 @@ class UsuarioService(BaseService):
 
         # Crear la instancia del usuario
         instance = super(UsuarioService, cls).crear(**kwargs)
-        print("🔍 Instancia creada:", instance)
 
         # Enviar correo de bienvenida si el usuario se creó correctamente
         if instance and "correo" in kwargs:
-            print("📧 Intentando enviar correo de bienvenida a:", kwargs["correo"])
+            print(" Intentando enviar correo de bienvenida a:", kwargs["correo"])
             EmailService.send_welcome_email(kwargs["correo"])
 
         return instance

@@ -40,7 +40,7 @@ class ProcesoDAO(BaseDAO):
                 INNER JOIN sena.Pregunta P2 on C.id = P2.cuestionario_id
                 INNER JOIN sena.Respuesta R on P2.id = R.pregunta_id
                 INNER JOIN sena.Usuario U on U.id = R.usuario_id
-                INNER JOIN sena.Aprendiz A on A.id = R.aprendiz_id 
+                INNER JOIN sena.Aprendiz A on A.id = P.aprendiz_id 
                 WHERE P.fechaElimino IS NULL
                 AND P.estado_aprobacion = %s;
             """, [approved_status])
