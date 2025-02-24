@@ -3,7 +3,7 @@ from django.db import transaction
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.respuestas_dao import RespuestasDAO
 from appdesercion.Entity.Dto.respuestas_dto import RespuestasDTO
-from appdesercion.models import Usuario, Pregunta, Aprendiz, Respuesta
+from appdesercion.models import Usuario, Pregunta, Aprendiz, Respuesta, Proceso
 
 
 class RespuestasService(BaseService):
@@ -26,6 +26,20 @@ class RespuestasService(BaseService):
                     )
                     respuestas.append(respuesta)
 
+                    if dato["respuesta"].startswith("CF"):
+                        cuestionario = pregunta.cuestionario
+
+                        proceso = Proceso.objects.filter(cuestionario_id=cuestionario.id).first()
+                        if proceso:
+                            proceso.estado_aprobacion = "coordinadorFPI"
+                            proceso.save()
+                    else:
+                        cuestionario = pregunta.cuestionario
+
+                        proceso = Proceso.objects.filter(cuestionario_id=cuestionario.id).first()
+                        if proceso:
+                            proceso.estado_aprobacion = "coordinadorAcademico"
+                            proceso.save()
             return {"data": respuestas}
         except Exception as e:
             return {"error": str(e)}
