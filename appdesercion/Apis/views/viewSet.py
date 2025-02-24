@@ -11,6 +11,7 @@ from drf_yasg.utils import swagger_auto_schema
 from django.utils import timezone  # ✅ Importar timezone correctamente
 from yaml import serialize
 
+from appdesercion.Business.comentario_service import ComentarioService
 from appdesercion.Business.cuestionario_service import CuestionarioService
 from appdesercion.Business.pregunta_service import PreguntaService
 from appdesercion.Business.proceso_service import ProcesoService
@@ -443,6 +444,18 @@ class DesercionesViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
 class ComentarioViewSet(viewsets.ModelViewSet):
     queryset = Comentario.objects.filter(fechaElimino__isnull=True)
     serializer_class = ComentarioSerializer
+
+    def create(self, request, *args, **kwargs):
+
+        datos = request.data  # Recibe los datos enviados en el body
+        resultado = ComentarioService.registrar_comentario(datos)  # Llama al servicio
+
+        if "error" in resultado:
+            return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Serializar la respuesta con los datos del comentario guardado
+        comentario_serializado = ComentarioSerializer(resultado["data"])
+        return Response(comentario_serializado.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
