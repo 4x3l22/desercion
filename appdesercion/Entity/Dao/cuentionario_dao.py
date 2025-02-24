@@ -1,10 +1,11 @@
 from appdesercion.Entity.Dao.base_dao import BaseDAO
-from appdesercion.Entity.Dto.cuestionario_dto import CuestionarioDTO
 from django.db import connection
+
+from appdesercion.models import Cuestionario
 
 
 class CuentionarioDAO(BaseDAO):
-    model=CuestionarioDTO
+    model=Cuestionario
 
     @staticmethod
     def list_cuestionarios(cuestionario_id):

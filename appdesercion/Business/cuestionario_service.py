@@ -1,11 +1,11 @@
 from appdesercion.Business.base_service import BaseService
 from appdesercion.Entity.Dao.cuentionario_dao import CuentionarioDAO
-from appdesercion.Entity.Dto.cuestionario_dto import CuestionarioDTO
 from appdesercion.Entity.Dto.dto_personalizado.procesos_dto import ProcesosCuestionariosDTO
+from appdesercion.models import Cuestionario
 
 
 class CuestionarioService(BaseService):
-    model=CuestionarioDTO
+    model=Cuestionario
     dao=CuentionarioDAO
 
     @staticmethod
