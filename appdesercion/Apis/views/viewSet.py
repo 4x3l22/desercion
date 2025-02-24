@@ -362,6 +362,15 @@ class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
     queryset = Proceso.objects.filter(fechaElimino__isnull=True)
     serializer_class = ProcesoSerializer
 
+    def create(self, request):
+
+        resultado = ProcesoService.registrar_proceso(request.data)
+
+        if "error" in resultado:
+            return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(resultado["data"], status=status.HTTP_201_CREATED)
+
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs, partial=True)
 
