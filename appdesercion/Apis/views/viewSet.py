@@ -466,6 +466,43 @@ class ComentarioViewSet(viewsets.ModelViewSet):
         instance.save()
         return Response({"message": "Comentario Eliminado correctamente"}, status=status.HTTP_204_NO_CONTENT)
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "usuario_id",
+                openapi.IN_QUERY,
+                description="Id del usuario",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+            openapi.Parameter(
+                "approval_status",
+                openapi.IN_QUERY,
+                description="Estatus que aprueba el proceso",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ]
+    )
+    @action(detail=False, methods=["get"], url_path="data")
+    def data_comment(self, request):
+        usuario_id = request.query_params.get("usuario_id")
+        approval_status = request.query_params.get("approval_status")
+
+        if not usuario_id or not approval_status:
+            return Response(
+                {"error": "Faltan parámetros obligatorios: usuario_id y approval_status"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Llamamos al servicio para obtener los comentarios
+        resultado = ComentarioService.list_comment(usuario_id, approval_status)
+
+        if "error" in resultado:
+            return Response({"error": resultado["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(resultado, status=status.HTTP_200_OK)
+
 class PreguntaViewSet(viewsets.ModelViewSet):
     queryset = Pregunta.objects.filter(fechaElimino__isnull=True)
     serializer_class = PreguntaSerializer
