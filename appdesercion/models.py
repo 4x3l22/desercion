@@ -199,6 +199,7 @@ class Respuesta(models.Model):
     id = models.AutoField(primary_key=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     pregunta = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+    aprendiz = models.ForeignKey(Aprendiz, on_delete=models.CASCADE, null=True)
     respuesta = models.TextField(blank=True, null=True)
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)

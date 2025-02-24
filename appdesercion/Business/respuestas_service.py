@@ -15,6 +15,8 @@ class RespuestasService(BaseService):
         respuestas = []
         try:
             with transaction.atomic():
+                cambiar_estado = False
+                proceso = None
                 for dato in datos:
                     usuario = Usuario.objects.get(id=dato["usuario"])
                     pregunta = Pregunta.objects.get(id=dato["pregunta"])
@@ -26,20 +28,19 @@ class RespuestasService(BaseService):
                     )
                     respuestas.append(respuesta)
 
+                    # ✅ Verificar si la respuesta empieza con "CF"
                     if dato["respuesta"].startswith("CF"):
-                        cuestionario = pregunta.cuestionario
+                        cambiar_estado = True  # ✅ Se activa la bandera
 
-                        proceso = Proceso.objects.filter(cuestionario_id=cuestionario.id).first()
-                        if proceso:
-                            proceso.estado_aprobacion = "coordinadorFPI"
-                            proceso.save()
-                    else:
+                    # ✅ Obtener el proceso solo una vez
+                    if not proceso:
                         cuestionario = pregunta.cuestionario
-
                         proceso = Proceso.objects.filter(cuestionario_id=cuestionario.id).first()
-                        if proceso:
-                            proceso.estado_aprobacion = "coordinadorAcademico"
-                            proceso.save()
+
+                    if proceso:
+                        proceso.estado_aprobacion = "coordinadorFPI" if cambiar_estado else "coordinadorAcademico"
+                        proceso.save()
+
             return {"data": respuestas}
         except Exception as e:
             return {"error": str(e)}
