@@ -163,5 +163,9 @@ class ConsultarDocumentoSerializer(serializers.ModelSerializer):
                   "tipoDocumento_nombre"
                   ]
 
-# class CuestionarioIdSerializer(serializers.serializer):
-#     cuestionario_id = serializers.IntegerField()
+class ListTraineesSerializer(serializers.Serializer):
+    id_instructor = serializers.IntegerField()
+
+class ProcessInstructorSerializer(serializers.Serializer):
+    user_id = serializers.IntegerField()
+    state = serializers.CharField()

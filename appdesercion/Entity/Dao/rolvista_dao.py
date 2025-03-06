@@ -27,7 +27,8 @@ class RolVistaDAO(BaseDAO):
                 INNER JOIN sena.Vista AS v ON v.Id = rv.vista_id_id
                 INNER JOIN sena.Modulo AS m ON m.Id = v.modulo_id_id
                 WHERE r.Id = %s
-                AND rv.fechaElimino IS NULL;
+                AND rv.fechaElimino IS NULL
+                ORDER BY nombreVista ASC;
             """, [rol_id])
             columnas = [col[0] for col in cursor.description]
             resultados = [MenuDto(**dict(zip(columnas, fila))) for fila in cursor.fetchall()]

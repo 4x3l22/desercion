@@ -188,6 +188,14 @@ class Comentario(models.Model):
     proceso_id = models.ForeignKey(Proceso, on_delete=models.CASCADE)
     usuario_id= models.ForeignKey(Usuario, on_delete=models.CASCADE)
     texto = models.TextField(blank=True, null=True)
+    estado = models.CharField(
+        max_length=20,
+        choices=[
+            ('aprobado', 'Aprobado'),
+            ('rechazado', 'Rechazado')
+        ],
+        null=True
+    )
     fechaCreo = models.DateTimeField(auto_now_add=True)
     fechaModifico = models.DateTimeField(auto_now=True)
     fechaElimino = models.DateTimeField(blank=True, null=True)
