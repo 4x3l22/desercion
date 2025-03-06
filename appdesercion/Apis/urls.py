@@ -1,9 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+
+from appdesercion.Apis.serializers.serializer import ListTraineesSerializer
 from appdesercion.Apis.views.viewSet import CuestionarioViewSet, DesercionesViewSet, LoginView, ModuloViewSet, \
     ProcesoViewSet, RecuperarContrasenaViewSet, RespuestasViewSet, RolViewSet, RolVistaViewSet, \
     UsuarioRolViewSet, UsuarioViewSet, VistaViewSet, AprendizViewSet, ComentarioViewSet, PreguntaViewSet, \
-    TipoDocumentoViewSet
+    TipoDocumentoViewSet, ListTraineesViewSet
 
 router = DefaultRouter()
 router.register(r'modulos', ModuloViewSet, basename='modulo')
@@ -21,8 +23,10 @@ router.register(r'deserciones', DesercionesViewSet, basename='deserciones')
 router.register(r'comentarios', ComentarioViewSet, basename='comentarios')
 router.register(r'pregunta', PreguntaViewSet, basename='pregunta')
 router.register(r'documento', TipoDocumentoViewSet, basename='documento')
+router.register(r'listtrainees', ListTraineesViewSet, basename='listtrainees')
 
 urlpatterns = [
     path('', include(router.urls)),
     path('login/', LoginView.as_view(), name='login'),
+    # path('list_trainees', ListTraineesViewSet.as_view(), name='list_trainees'),
 ]

@@ -13,6 +13,8 @@ from yaml import serialize
 
 from appdesercion.Business.comentario_service import ComentarioService
 from appdesercion.Business.cuestionario_service import CuestionarioService
+from appdesercion.Business.instructor.list_trainees_service import ListTraineesService
+from appdesercion.Business.instructor.process_instructor_service import ProcessInstructorService
 from appdesercion.Business.pregunta_service import PreguntaService
 from appdesercion.Business.proceso_service import ProcesoService
 from appdesercion.Business.recuperarContrasena_service import RecuperarContrasenaService
@@ -29,7 +31,7 @@ from appdesercion.Apis.serializers.serializer import CuestionarioSerializers, De
     RespuestasSerializer, RolSerializer, RolVistaSerializer, UsuarioLoginSerializer, UsuarioRolSerializer, \
     UsuarioSerializer, VerificarCodigoSerializer, VistaSerializer, AprendizSerializer, \
     ComentarioSerializer, PreguntaSerializer, TipoDocumentoSerializer, \
-    ConsultarDocumentoSerializer  # ✅ Importar explícitamente
+    ConsultarDocumentoSerializer, ListTraineesSerializer, ProcessInstructorSerializer  # ✅ Importar explícitamente
 
 class ModuloViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet en VistaViewSet
     queryset = Modulo.objects.filter(fechaElimino__isnull=True)  # Filtra solo los activos
@@ -373,7 +375,13 @@ class ProcesoViewSet(viewsets.ModelViewSet):  # ✅ Cambiado ModelViewSet
         return Response(resultado["data"], status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs, partial=True)
+        kwargs["partial"] = request.method == "PATCH"
+        response = super().update(request, *args, **kwargs)  # Llamada original
+
+        if request.method == "PATCH":
+            response.status_code = status.HTTP_200_OK  # Cambia solo si es PATCH
+
+        return response
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -564,3 +572,59 @@ class TipoDocumentoViewSet(viewsets.ModelViewSet):
         instance.save()
 
         return Response({'message':'Tipo de documento eliminado correctamente'}, status=status.HTTP_204_NO_CONTENT)
+
+class ListTraineesViewSet(viewsets.ViewSet):
+
+    @swagger_auto_schema(
+        request_body=ListTraineesSerializer,
+        responses={ 200: 'OK, end of data loading'}
+    )
+    @action(detail=False, methods=["post"], url_path="list_trainees")
+    def list_trainees(self, request):
+
+        serializer = ListTraineesSerializer(data=request.data)
+
+        if serializer.is_valid():
+            id_instructor = request.data.get('id_instructor')
+
+            if not id_instructor:
+                return Response(
+                    {'Error: ': 'The params are required'}, status=status.HTTP_404_NOT_FOUND
+                )
+
+            result = ListTraineesService.list_for_instructor(id_instructor)
+            result_dict = [vars(resultTrainees) for resultTrainees in result]
+            return Response(result_dict, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                "user_id",
+                openapi.IN_QUERY,
+                description="Id del usuario",
+                type=openapi.TYPE_STRING,
+                required=True
+            ),
+            openapi.Parameter(
+                "state",
+                openapi.IN_QUERY,
+                description="Estatus que aprueba el proceso",
+                type=openapi.TYPE_STRING,
+                required=True
+            )
+        ],
+        responses={200: "OK, end of data loading"}
+    )
+    @action(detail=False, methods=["get"], url_path="process_instructor")
+    def get_process(self, request):
+
+        user_id = request.query_params.get("user_id")
+        state = request.query_params.get("state")
+
+        if not user_id or not state:
+            return Response({'Error': 'The params are required'}, status=status.HTTP_404_NOT_FOUND)
+
+        result = ProcessInstructorService.process_instructor(user_id, state)
+        return Response(result, status=status.HTTP_200_OK)

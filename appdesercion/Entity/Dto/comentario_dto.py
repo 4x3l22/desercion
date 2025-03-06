@@ -11,7 +11,7 @@ class QuestionCommentDTO:
     pregunta_id: int
     texto_pregunta: str
     tipo_pregunta: str
-    opciones_pregunta: List[str] = field(default_factory=list)  # ✅ Asegurar que sea una lista
+    opciones_pregunta: List[str] = field(default_factory=list)
     respuestas: List[AnswerCommentDTO] = field(default_factory=list)
 
 @dataclass
@@ -24,8 +24,8 @@ class ListaProcesosCuestionariosCommetDTO:
     nombre_aprendiz: str
     apellidos_aprendiz: str
     documento_aprendiz: str
-    numero_documento_usuario: str  # ✅ Se mantiene como string
+    numero_documento_usuario: str
     cuestionario_nombre: str
     cuestionario_descripcion: str
-    comentario: List[str] = field(default_factory=list)  # ✅ Ahora es una lista de strings
+    comentario: List[str] = field(default_factory=list)
     preguntas: List[QuestionCommentDTO] = field(default_factory=list)

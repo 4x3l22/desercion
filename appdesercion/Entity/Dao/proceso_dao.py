@@ -38,12 +38,11 @@ class ProcesoDAO(BaseDAO):
                 FROM sena.Proceso AS P
                 INNER JOIN sena.Cuestionario C on P.cuestionario_id_id = C.id
                 INNER JOIN sena.Pregunta P2 on C.id = P2.cuestionario_id
-                INNER JOIN sena.Respuesta R on P2.id = R.pregunta_id
-                INNER JOIN sena.Usuario U on U.id = R.usuario_id
-                INNER JOIN sena.Aprendiz A on A.id = P.aprendiz_id 
+                INNER JOIN sena.Usuario U on U.id = P.usuario_id_id
+                INNER JOIN sena.Aprendiz A on A.id = P.aprendiz_id
+                LEFT JOIN sena.Respuesta R on R.aprendiz_id = P.aprendiz_id 
                 WHERE P.fechaElimino IS NULL
-                AND P.estado_aprobacion = %s
-                AND R.aprendiz_id = P.aprendiz_id;
+                AND P.estado_aprobacion = %s;
             """, [approved_status])
             columns = [col[0] for col in cursor.description]
             results = [dict(zip(columns, row)) for row in cursor.fetchall()]
